@@ -1,0 +1,328 @@
+<!-- 
+  src/components/CustomCursor.astro
+  This component creates two elements, a "dot" (the main cursor)
+  and a "chaser" (the trail), and animates them performantly.
+-->
+<div id="cursor-dot" class="cursor"></div>
+<div id="cursor-chaser" class="cursor"></div>
+<div id="cursor-trail" class="cursor-trail"></div>
+
+<style>
+/* These styles are scoped to the cursor elements.
+  We hide the default cursor and set positioning in global.css
+*/
+.cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    pointer-events: none; /* Crucial! So you can click through it */
+    border-radius: 50%;
+    /* We'll set the initial transform in JS */
+    
+    /* Smooth transitions for state changes (hover, click) */
+    transition: 
+        width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        height 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        background-color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        border-color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* The solid dot that tracks the mouse */
+#cursor-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--black);
+}
+
+/* The "trail" element that chases the dot */
+#cursor-chaser {
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    border: 2px solid var(--black);
+    opacity: 0.5;
+    /* The actual "chase" animation is handled by JS (lerp) 
+      for a much smoother feel than a CSS transition.
+    */
+}
+
+/* --- Interaction States --- */
+/* These classes are added to the <body> by the script */
+
+/* Hover state: dot becomes outline, chaser gets bigger */
+body.is-hovering #cursor-dot {
+    background-color: transparent;
+    border: 2px solid var(--black);
+    width: 30px;
+    height: 30px;
+}
+body.is-hovering #cursor-chaser {
+    width: 40px;
+    height: 40px;
+    opacity: 0.3;
+}
+
+/* Click state: dot fills chaser */
+body.is-clicking #cursor-dot {
+    background-color: var(--black);
+    width: 30px;
+    height: 30px;
+}
+body.is-clicking #cursor-chaser {
+    width: 30px;
+    height: 30px;
+    opacity: 0.5;
+}
+
+/* Snake trail container */
+.cursor-trail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9998;
+    pointer-events: none;
+}
+
+/* Individual trail blocks */
+.trail-block {
+    position: absolute;
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: var(--black);
+    border-radius: 0;
+    /* Pixelated look like old Nokia games */
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    opacity: 0.6;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.2s ease-out;
+}
+</style>
+
+<script is:inline>
+/*
+  This script runs on the client to power the cursor.
+  'is:inline' ensures it's part of the page.
+*/
+function initCursor() {
+    // Check if we've already run this setup
+    if (document.body.dataset.cursorSetup) {
+        return;
+    }
+    document.body.dataset.cursorSetup = 'true';
+
+    const dot = document.getElementById('cursor-dot');
+    const chaser = document.getElementById('cursor-chaser');
+    const trailContainer = document.getElementById('cursor-trail');
+
+    // Store current and target positions
+    let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let dotPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let chaserPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
+    // Snake trail configuration
+    const trailConfig = {
+        maxLength: 15, // Number of blocks in the trail
+        spacing: 24, // Pixels between each block
+        blockSize: 8 // Size of each block in pixels
+    };
+    
+    // Store mouse position history for the trail
+    let mouseHistory = [];
+    let trailBlocks = [];
+    
+    // Initialize history with starting position
+    mouseHistory.push({ x: mouse.x, y: mouse.y });
+
+    // Initialize cursor positions immediately
+    if (dot && chaser) {
+        dot.style.transform = `translate3d(${dotPos.x}px, ${dotPos.y}px, 0) translate(-50%, -50%)`;
+        chaser.style.transform = `translate3d(${chaserPos.x}px, ${chaserPos.y}px, 0) translate(-50%, -50%)`;
+    }
+
+    let isHovering = false;
+
+    // Update mouse position from event
+    window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+        
+        // Add to history for trail (sample more frequently for smoother path)
+        const lastPos = mouseHistory[mouseHistory.length - 1];
+        if (!lastPos || 
+            Math.abs(lastPos.x - e.clientX) > 5 || 
+            Math.abs(lastPos.y - e.clientY) > 5) {
+            mouseHistory.push({ x: e.clientX, y: e.clientY });
+            
+            // Limit history length to keep performance good
+            const maxHistoryLength = trailConfig.maxLength * trailConfig.spacing / 5;
+            if (mouseHistory.length > maxHistoryLength) {
+                mouseHistory.shift();
+            }
+        }
+    });
+
+    // Lerp (Linear Interpolation) function for smooth chasing
+    // (start, end, amount)
+    function lerp(s, e, a) {
+        return (1 - a) * s + a * e;
+    }
+
+    // Create or update trail blocks
+    function updateTrail() {
+        if (!trailContainer || mouseHistory.length < 2) return;
+        
+        // Calculate evenly spaced positions along the path
+        const trailPositions = [];
+        const totalDistance = calculatePathDistance(mouseHistory);
+        
+        // Create blocks spaced evenly along the path
+        for (let i = 0; i < trailConfig.maxLength; i++) {
+            const targetDistance = totalDistance - (i * trailConfig.spacing);
+            if (targetDistance > 0) {
+                const pos = getPositionAtDistance(mouseHistory, targetDistance);
+                if (pos) {
+                    trailPositions.push(pos);
+                }
+            }
+        }
+        
+        // Create or update blocks
+        trailPositions.forEach((pos, index) => {
+            let block = trailBlocks[index];
+            
+            if (!block) {
+                // Create new block
+                block = document.createElement('div');
+                block.className = 'trail-block';
+                trailContainer.appendChild(block);
+                trailBlocks[index] = block;
+            }
+            
+            // Update position and opacity (fade out as it gets further from cursor)
+            const opacity = 0.7 - (index / trailConfig.maxLength) * 0.5;
+            block.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0) translate(-50%, -50%)`;
+            block.style.opacity = Math.max(0.2, opacity);
+            block.style.display = 'block';
+        });
+        
+        // Hide or remove excess blocks
+        for (let i = trailPositions.length; i < trailBlocks.length; i++) {
+            const block = trailBlocks[i];
+            if (block) {
+                block.style.display = 'none';
+            }
+        }
+    }
+    
+    // Calculate total distance along the path
+    function calculatePathDistance(history) {
+        let distance = 0;
+        for (let i = 1; i < history.length; i++) {
+            const dx = history[i].x - history[i - 1].x;
+            const dy = history[i].y - history[i - 1].y;
+            distance += Math.sqrt(dx * dx + dy * dy);
+        }
+        return distance;
+    }
+    
+    // Get position at a specific distance along the path
+    function getPositionAtDistance(history, targetDistance) {
+        let accumulatedDistance = 0;
+        
+        for (let i = 1; i < history.length; i++) {
+            const dx = history[i].x - history[i - 1].x;
+            const dy = history[i].y - history[i - 1].y;
+            const segmentDistance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (accumulatedDistance + segmentDistance >= targetDistance) {
+                // Interpolate within this segment
+                const t = (targetDistance - accumulatedDistance) / segmentDistance;
+                return {
+                    x: history[i - 1].x + dx * t,
+                    y: history[i - 1].y + dy * t
+                };
+            }
+            
+            accumulatedDistance += segmentDistance;
+        }
+        
+        // If we've gone past the end, return the last position
+        return history[history.length - 1];
+    }
+
+    // High-performance animation loop
+    function animate() {
+        // Dot moves instantly (or with a tiny lerp for smoothing)
+        // We use a small lerp to prevent jitter
+        dotPos.x = lerp(dotPos.x, mouse.x, 0.9);
+        dotPos.y = lerp(dotPos.y, mouse.y, 0.9);
+        
+        // Chaser "chases" the dot's position at a slower rate
+        chaserPos.x = lerp(chaserPos.x, dotPos.x, 0.15);
+        chaserPos.y = lerp(chaserPos.y, dotPos.y, 0.15);
+
+        // Apply transforms using translate3d for hardware acceleration
+        if (dot && chaser) {
+            // Apply -50% translation via CSS, just set the position here
+            dot.style.transform = `translate3d(${dotPos.x}px, ${dotPos.y}px, 0) translate(-50%, -50%)`;
+            chaser.style.transform = `translate3d(${chaserPos.x}px, ${chaserPos.y}px, 0) translate(-50%, -50%)`;
+        }
+
+        // Update trail
+        updateTrail();
+
+        // Keep the loop going
+        requestAnimationFrame(animate);
+    }
+    
+    // Start the animation loop
+    animate();
+
+    // --- Handle Interaction States ---
+
+    // Click state
+    window.addEventListener('mousedown', () => {
+        document.body.classList.add('is-clicking');
+    });
+    window.addEventListener('mouseup', () => {
+        document.body.classList.remove('is-clicking');
+    });
+
+    // Hover state
+    // We use event delegation on the body for performance
+    document.body.addEventListener('mouseover', (e) => {
+        // Check if the element or its parent has the data-hover attribute
+        if (e.target.closest('[data-hover="true"]')) {
+            isHovering = true;
+            document.body.classList.add('is-hovering');
+        }
+    });
+    document.body.addEventListener('mouseout', (e) => {
+        if (e.target.closest('[data-hover="true"]')) {
+            isHovering = false;
+            document.body.classList.remove('is-hovering');
+        }
+    });
+
+    // Hide cursor on touch devices for a cleaner experience
+    window.addEventListener('touchstart', () => {
+        if (dot) dot.style.display = 'none';
+        if (chaser) chaser.style.display = 'none';
+        if (trailContainer) trailContainer.style.display = 'none';
+    }, { once: true });
+}
+
+// Run on page load (Astro navigation)
+document.addEventListener('astro:page-load', initCursor);
+
+// Also run immediately if DOM is already ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCursor);
+} else {
+    initCursor();
+}
+</script>

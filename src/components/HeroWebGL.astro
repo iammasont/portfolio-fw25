@@ -1,0 +1,542 @@
+---
+// src/components/HeroWebGL.astro
+// This component encapsulates your hero section and all its logic.
+---
+<section id="hero" data-hover="true">
+
+    <!-- These canvases are for desktop -->
+    <canvas id="outline-canvas"></canvas>
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- This static text is for mobile -->
+    <div class="static-hero-text">
+        I help artists & causes create tangible experiences that demand attention and intimacy, to affect change locally and around the world.
+    </div>
+</section>
+
+<script is:inline>
+    // --- We removed the 'isMobile()' JS check ---
+    // The CSS media query is the single source of truth for showing/hiding.
+    // This script will now run on all devices, but the canvases will be
+    // hidden by CSS on mobile, which is a safe and common pattern.
+    
+    const canvas = document.getElementById('webgl-canvas');
+    const outlineCanvas = document.getElementById('outline-canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    const outlineCtx = outlineCanvas.getContext('2d');
+    
+    if (!gl) {
+        console.error('WebGL not supported');
+        const hero = document.getElementById('hero');
+        if (hero) {
+            hero.innerHTML = '<p style="color: var(--black); padding: 2em;">Error: WebGL not supported. Please enable it or use a modern browser.</p>';
+        }
+    }
+    
+    // Parameters (with your preferred values)
+    const params = {
+        bgColor: '#e02929',
+        fgColor: '#000000',
+        spacing: 5,
+        minSize: 1.1,
+        maxSize: 4,
+        skipChance: 0,
+        lineHeight: 0.95,
+        /* --- YOUR PREFERRED PARAMS --- */
+        outlineWidth: 2,
+        outlineDashed: true,
+        dashLength: 12,
+        dashGap: 1,
+        /* --- End Your Params --- */
+        waveAmplitude: 0.8,
+        waveSpeed: 0.01,
+        noiseAmplitude: 0.6,
+        noiseFrequency: 0.002,
+        noiseSpeed: 0.003,
+        mouseRadius: 60,
+        /* --- YOUR PREFERRED PARAMS --- */
+        mouseGrowth: 8,
+        opacityMin: 0.95,
+        /* --- End Your Params --- */
+        opacityMax: 1.0
+    };
+    
+    let particleData = {
+        positions: [],
+        baseSizes: [],
+        basePositions: []
+    };
+    let mouse = { x: -1000, y: -1000 };
+    let mouseActive = false;
+    
+    /* --- FIX: Start animation on load --- */
+    let interactionLevel = 1; // Was 0
+    /* --- End Fix --- */
+    
+    let time = 0;
+    let isInitialized = false;
+    
+    // Vertex shader
+    const vertexShaderSource = `
+        attribute vec2 a_position;
+        attribute float a_baseSize;
+        attribute vec2 a_basePosition;
+        
+        uniform vec2 u_resolution;
+        uniform float u_time;
+        uniform vec2 u_mouse;
+        uniform float u_interactionLevel;
+        uniform float u_waveAmplitude;
+        uniform float u_waveSpeed;
+        uniform float u_noiseAmplitude;
+        uniform float u_noiseFrequency;
+        uniform float u_noiseSpeed;
+        uniform float u_mouseRadius;
+        uniform float u_mouseGrowth;
+        uniform float u_opacityMin;
+        uniform float u_opacityMax;
+        
+        varying float v_alpha;
+        
+        float noise(vec2 p, float t) {
+            float n1 = sin(p.x * 0.01 + t * 0.3) * cos(p.y * 0.01);
+            float n2 = sin(p.x * 0.02 + t * 0.2) * cos(p.y * 0.015 + t * 0.1);
+            float n3 = sin((p.x + p.y) * 0.005 + t * 0.15);
+            return (n1 + n2 * 0.5 + n3 * 0.3) / 1.8;
+        }
+        
+        float easeOutQuart(float x) {
+            return 1.0 - pow(1.0 - x, 4.0);
+        }
+        
+        void main() {
+            float noiseValue = noise(
+                a_basePosition * u_noiseFrequency,
+                u_time * u_noiseSpeed
+            );
+            float noiseSize = noiseValue * u_noiseAmplitude;
+            
+            float waveValue = sin(a_basePosition.x * 0.003 + u_time * u_waveSpeed);
+            float waveSize = waveValue * u_waveAmplitude * u_interactionLevel;
+            
+            float dist = distance(a_position, u_mouse);
+            float mouseSize = 0.0;
+            if (dist < u_mouseRadius && u_interactionLevel > 0.3) {
+                float force = (u_mouseRadius - dist) / u_mouseRadius;
+                float easedForce = easeOutQuart(force);
+                mouseSize = easedForce * u_mouseGrowth * u_interactionLevel;
+            }
+            
+            float finalSize = a_baseSize + noiseSize + waveSize + mouseSize;
+            
+            float sizeRatio = clamp(finalSize / 8.0, 0.0, 1.0);
+            float opacityRange = u_opacityMax - u_opacityMin;
+            v_alpha = u_opacityMin + (sizeRatio * opacityRange);
+            
+            vec2 clipSpace = ((a_position / u_resolution) * 2.0 - 1.0) * vec2(1, -1);
+            gl_Position = vec4(clipSpace, 0, 1);
+            gl_PointSize = finalSize * 2.0;
+        }
+    `;
+    
+    const fragmentShaderSource = `
+        precision mediump float;
+        uniform vec3 u_color;
+        varying float v_alpha;
+        
+        void main() {
+            vec2 coord = gl_PointCoord - vec2(0.5);
+            if (length(coord) > 0.5) {
+                discard;
+            }
+            gl_FragColor = vec4(u_color, v_alpha);
+        }
+    `;
+    
+    function createShader(gl, type, source) {
+        if (!gl) return null;
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            console.error('Shader compile error:', gl.getShaderInfoLog(shader));
+            gl.deleteShader(shader);
+            return null;
+        }
+        return shader;
+    }
+    
+    function createProgram(gl, vertexShader, fragmentShader) {
+        if (!gl || !vertexShader || !fragmentShader) return null;
+        const program = gl.createProgram();
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+            console.error('Program link error:', gl.getProgramInfoLog(program));
+            gl.deleteProgram(program);
+            return null;
+        }
+        return program;
+    }
+    
+    if (gl) {
+        const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+        const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+        const program = createProgram(gl, vertexShader, fragmentShader);
+        
+        if (program) {
+            const positionLocation = gl.getAttribLocation(program, 'a_position');
+            const baseSizeLocation = gl.getAttribLocation(program, 'a_baseSize');
+            const basePositionLocation = gl.getAttribLocation(program, 'a_basePosition');
+            
+            const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
+            const timeLocation = gl.getUniformLocation(program, 'u_time');
+            const mouseLocation = gl.getUniformLocation(program, 'u_mouse');
+            const interactionLevelLocation = gl.getUniformLocation(program, 'u_interactionLevel');
+            const colorLocation = gl.getUniformLocation(program, 'u_color');
+            const waveAmplitudeLocation = gl.getUniformLocation(program, 'u_waveAmplitude');
+            const waveSpeedLocation = gl.getUniformLocation(program, 'u_waveSpeed');
+            const noiseAmplitudeLocation = gl.getUniformLocation(program, 'u_noiseAmplitude');
+            const noiseFrequencyLocation = gl.getUniformLocation(program, 'u_noiseFrequency');
+            const noiseSpeedLocation = gl.getUniformLocation(program, 'u_noiseSpeed');
+            const mouseRadiusLocation = gl.getUniformLocation(program, 'u_mouseRadius');
+            const mouseGrowthLocation = gl.getUniformLocation(program, 'u_mouseGrowth');
+            const opacityMinLocation = gl.getUniformLocation(program, 'u_opacityMin');
+            const opacityMaxLocation = gl.getUniformLocation(program, 'u_opacityMax');
+            
+            const positionBuffer = gl.createBuffer();
+            const baseSizeBuffer = gl.createBuffer();
+            const basePositionBuffer = gl.createBuffer();
+            
+            
+            function initParticles() {
+                if (!canvas || canvas.width === 0 || canvas.height === 0) {
+                    return;
+                }
+                
+                const offscreen = document.createElement('canvas');
+                const offCtx = offscreen.getContext('2d');
+                
+                offscreen.width = canvas.width;
+                offscreen.height = canvas.height;
+                
+                /* --- FIX: 4k Font Size --- */
+                const fontSize = Math.min(canvas.width / 15, 110); // Was 80
+                /* --- End Fix --- */
+                
+                offCtx.fillStyle = params.fgColor;
+                offCtx.font = `700 ${fontSize}px 'Geist', sans-serif`;
+                offCtx.textAlign = 'left';
+                offCtx.textBaseline = 'middle';
+                
+                const text = "I help artists & causes create tangible experiences that demand attention and intimacy, to affect change locally and around the world.";
+                
+                /* --- FIX: Alignment & Wrapping --- */
+                const margin = canvas.width * 0.05; // Was 0.1
+                const maxWidth = canvas.width * 0.9; // Was 0.8
+                /* --- End Fix --- */
+                
+                const words = text.split(' ');
+                const lines = [];
+                let line = '';
+                
+                for (let i = 0; i < words.length; i++) {
+                    const testLine = line + (line ? ' ' : '') + words[i];
+                    const metrics = offCtx.measureText(testLine);
+                    
+                    if (metrics.width > maxWidth && line) {
+                        lines.push(line);
+                        line = words[i];
+                    } else {
+                        line = testLine;
+                    }
+                }
+                if (line) lines.push(line);
+                
+                window.textLines = lines;
+                window.textMargin = margin;
+                window.textFontSize = fontSize;
+                
+                const lineHeight = fontSize * params.lineHeight;
+                const totalHeight = lines.length * lineHeight;
+                const startY = (canvas.height - totalHeight) / 2 + fontSize / 2;
+                
+                window.textStartY = startY;
+                window.textLineHeight = lineHeight;
+                
+                lines.forEach((currentLine, index) => {
+                    offCtx.fillText(currentLine, margin, startY + index * lineHeight);
+                });
+                
+                const imageData = offCtx.getImageData(0, 0, offscreen.width, offscreen.height);
+                const data = imageData.data;
+                
+                const positions = [];
+                const baseSizes = [];
+                const basePositions = [];
+                
+                const spacing = params.spacing;
+                
+                for (let y = 0; y < offscreen.height; y += spacing) {
+                    for (let x = 0; x < offscreen.width; x += spacing) {
+                        const px = Math.floor(x);
+                        const py = Math.floor(y);
+                        
+                        if (px < 0 || px >= offscreen.width || py < 0 || py >= offscreen.height) continue;
+                        
+                        const index = (py * offscreen.width + px) * 4;
+                        const alpha = data[index + 3];
+                        
+                        if (alpha > 100) {
+                            let density = 0;
+                            const checkRadius = 10;
+                            
+                            for (let dy = -checkRadius; dy <= checkRadius; dy += 3) {
+                                for (let dx = -checkRadius; dx <= checkRadius; dx += 3) {
+                                    const nx = Math.floor(px + dx);
+                                    const ny = Math.floor(py + dy);
+                                    
+                                    if (nx >= 0 && nx < offscreen.width && ny >= 0 && ny < offscreen.height) {
+                                        const nIndex = (ny * offscreen.width + nx) * 4;
+                                        if (data[nIndex + 3] > 100) density++;
+                                    }
+                                }
+                            }
+                            
+                            const maxDensity = ((checkRadius * 2) / 3) * ((checkRadius * 2) / 3);
+                            const densityRatio = density / maxDensity;
+                            
+                            const sizeRange = params.maxSize - params.minSize;
+                            const baseSize = params.minSize + (densityRatio * densityRatio * sizeRange);
+                            
+                            const skipChance = (1 - densityRatio) * params.skipChance;
+                            if (Math.random() < skipChance) continue;
+                            
+                            positions.push(px, py);
+                            baseSizes.push(baseSize);
+                            basePositions.push(px, py);
+                        }
+                    }
+                }
+                
+                particleData = { positions, baseSizes, basePositions };
+                
+                gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+                
+                gl.bindBuffer(gl.ARRAY_BUFFER, baseSizeBuffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(baseSizes), gl.STATIC_DRAW);
+                
+                gl.bindBuffer(gl.ARRAY_BUFFER, basePositionBuffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(basePositions), gl.STATIC_DRAW);
+                
+                isInitialized = true;
+            }
+            
+            function renderOutline() {
+                if (!outlineCtx) return;
+                outlineCtx.clearRect(0, 0, outlineCanvas.width, outlineCanvas.height);
+                
+                if (window.textLines && params.outlineWidth > 0) {
+                    outlineCtx.strokeStyle = params.fgColor;
+                    outlineCtx.lineWidth = params.outlineWidth;
+                    outlineCtx.font = `700 ${window.textFontSize}px 'Geist', sans-serif`;
+                    outlineCtx.textAlign = 'left';
+                    outlineCtx.textBaseline = 'middle';
+                    
+                    if (params.outlineDashed) {
+                        outlineCtx.setLineDash([params.dashLength, params.dashGap]);
+                    } else {
+                        outlineCtx.setLineDash([]);
+                    }
+                    
+                    window.textLines.forEach((line, index) => {
+                        outlineCtx.strokeText(line, window.textMargin, window.textStartY + index * window.textLineHeight);
+                    });
+                    
+                    outlineCtx.setLineDash([]);
+                }
+            }
+            
+            function render() {
+                time += 1;
+                
+                // Smooth transition for interaction
+                // MODIFICATION: Start with a small amount of interaction so it's always moving
+                const targetInteraction = mouseActive ? 1 : 0.1; 
+                const transitionSpeed = mouseActive ? 0.05 : 0.02;
+                interactionLevel += (targetInteraction - interactionLevel) * transitionSpeed;
+                
+                // Parse colors
+                const fgColor = params.fgColor;
+                const r = parseInt(fgColor.slice(1, 3), 16) / 255;
+                const g = parseInt(fgColor.slice(3, 5), 16) / 255;
+                const b = parseInt(fgColor.slice(5, 7), 16) / 255;
+                
+                const bgColor = params.bgColor;
+                const bgR = parseInt(bgColor.slice(1, 3), 16) / 255;
+                const bgG = parseInt(bgColor.slice(3, 5), 16) / 255;
+                const bgB = parseInt(bgColor.slice(5, 7), 16) / 255;
+                
+                // Clear WebGL canvas
+                gl.clearColor(bgR, bgG, bgB, 1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+                
+                if (isInitialized && particleData.positions.length > 0) {
+                    gl.useProgram(program);
+                    
+                    // Set uniforms
+                    gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+                    gl.uniform1f(timeLocation, time);
+                    gl.uniform2f(mouseLocation, mouse.x, mouse.y);
+                    gl.uniform1f(interactionLevelLocation, interactionLevel);
+                    gl.uniform3f(colorLocation, r, g, b);
+                    gl.uniform1f(waveAmplitudeLocation, params.waveAmplitude);
+                    gl.uniform1f(waveSpeedLocation, params.waveSpeed);
+                    gl.uniform1f(noiseAmplitudeLocation, params.noiseAmplitude);
+                    gl.uniform1f(noiseFrequencyLocation, params.noiseFrequency);
+                    gl.uniform1f(noiseSpeedLocation, params.noiseSpeed);
+                    gl.uniform1f(mouseRadiusLocation, params.mouseRadius);
+                    gl.uniform1f(mouseGrowthLocation, params.mouseGrowth);
+                    gl.uniform1f(opacityMinLocation, params.opacityMin);
+                    gl.uniform1f(opacityMaxLocation, params.opacityMax);
+                    
+                    // Set attributes
+                    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+                    gl.enableVertexAttribArray(positionLocation);
+                    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+                    
+                    gl.bindBuffer(gl.ARRAY_BUFFER, baseSizeBuffer);
+                    gl.enableVertexAttribArray(baseSizeLocation);
+                    gl.vertexAttribPointer(baseSizeLocation, 1, gl.FLOAT, false, 0, 0);
+                    
+                    gl.bindBuffer(gl.ARRAY_BUFFER, basePositionBuffer);
+                    gl.enableVertexAttribArray(basePositionLocation);
+                    gl.vertexAttribPointer(basePositionLocation, 2, gl.FLOAT, false, 0, 0);
+                    
+                    // Enable blending
+                    gl.enable(gl.BLEND);
+                    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+                    
+                    // Draw particles (FIXED: no 'cost' typo)
+                    gl.drawArrays(gl.POINTS, 0, particleData.positions.length / 2);
+                    
+                    // Draw the outline on top (FIXED: line is present)
+                    renderOutline();
+                }
+                
+                requestAnimationFrame(render);
+            }
+            
+            function resize() {
+                const heroSection = document.getElementById('hero');
+                if (!heroSection) return;
+                const heroHeight = heroSection.offsetHeight;
+                
+                canvas.width = window.innerWidth;
+                canvas.height = heroHeight;
+                outlineCanvas.width = window.innerWidth;
+                outlineCanvas.height = heroHeight;
+                if (gl) { // Check if gl context exists before using it
+                    gl.viewport(0, 0, canvas.width, canvas.height);
+                }
+                
+                if (document.fonts.check('700 80px Geist')) {
+                    initParticles();
+                }
+            }
+            
+            canvas.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+                mouseActive = true;
+            });
+            
+            canvas.addEventListener('mouseleave', () => {
+                mouse.x = -1000;
+                mouse.y = -1000;
+                mouseActive = false;
+            });
+            
+            canvas.addEventListener('mouseenter', () => {
+                mouseActive = true;
+            });
+            
+            window.addEventListener('resize', resize);
+            
+            // We need to check for gl context existence before proceeding
+            if (gl) {
+                resize();
+            
+                document.fonts.ready.then(() => {
+                    resize();
+                    render();
+                });
+            }
+        }
+    }
+</script>
+
+<style>
+    /* Styles for the Hero component */
+    #hero {
+        position: relative;
+        width: 100svw;
+        height: 60svh;
+        min-height: 450px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding-left: 5svw; 
+    }
+    
+    #webgl-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    
+    #outline-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 10;
+    }
+
+    /* --- MOBILE FALLBACK --- */
+    .static-hero-text {
+        /* This text is hidden by default on desktop */
+        display: none;
+        font-size: clamp(2rem, 8svw, 6.875rem); /* Use the same font scaling */
+        font-weight: 700;
+        line-height: 0.95;
+        letter-spacing: -0.01em;
+        width: 90%; /* 100% - (2 * 5vw padding) */
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        #hero {
+            height: 50svh;
+            min-height: 400px;
+        }
+
+        /* --- MOBILE FALLBACK --- */
+        /* On mobile, hide the canvases */
+        #webgl-canvas,
+        #outline-canvas {
+            display: none;
+        }
+
+        /* And show the static text */
+        .static-hero-text {
+            display: block;
+        }
+    }
+</style>

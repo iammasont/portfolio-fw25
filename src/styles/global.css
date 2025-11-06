@@ -1,0 +1,33 @@
+* {
+    box-sizing: border-box;
+    cursor: none !important;
+}
+
+/* --- Custom Cursor Styles --- */
+html {
+    /* Hide the default OS cursor */
+    cursor: none;
+}
+
+/* Make links and buttons use the custom cursor */
+a,
+button,
+[data-hover="true"] {
+    cursor: none;
+}
+/* --- End Custom Cursor Styles --- */
+
+:root {
+    --red: #e02929;
+    --black: #000000;
+}
+
+body {
+    background: var(--red);
+    color: var(--black);
+    font-family: 'Geist', sans-serif;
+    overflow-x: hidden;
+    margin: 0; /* Add margin: 0 to override browser defaults */
+    padding: 0; /* Add padding: 0 to override browser defaults */
+}
+
