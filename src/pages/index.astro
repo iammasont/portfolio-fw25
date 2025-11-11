@@ -108,7 +108,7 @@ const projects = [
   }
   
   .section-header {
-      margin-bottom: 40px;
+      margin-bottom: 20px;
   }
   
   .year-label {
@@ -116,23 +116,26 @@ const projects = [
       font-size: 0.75rem;
       letter-spacing: 0.05em;
       text-transform: uppercase;
-      margin-bottom: 0.5rem;
       font-weight: 500;
-  }
+      margin: 0;
+    }
   
   .section-title {
       font-family: 'Geist', sans-serif;
       font-weight: 700;
-      font-size: clamp(2rem, 8svw, 5rem);
+      font-size: clamp(2rem, 12svw, 7rem);
       letter-spacing: -0.03em;
       line-height: 1.1;
-  }
+      margin: 2rem 0;
+      margin-bottom:5rem;
+    }
   
   .project-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
       gap: 40px 30px;
       max-width: 1400px;
+      padding-left: 10svw;
       /* This prevents items from stretching to the tallest height */
       align-items: start;
   }

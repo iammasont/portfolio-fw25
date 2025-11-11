@@ -35,12 +35,12 @@
     
     // Parameters (with your preferred values)
     const params = {
-        bgColor: '#e02929',
+        bgColor: '#d05c2a',
         fgColor: '#000000',
         spacing: 5,
         minSize: 1.1,
-        maxSize: 4,
-        skipChance: 0,
+        maxSize: 2,
+        skipChance: .25,
         lineHeight: 0.95,
         /* --- YOUR PREFERRED PARAMS --- */
         outlineWidth: 2,
@@ -50,7 +50,7 @@
         /* --- End Your Params --- */
         waveAmplitude: 0.8,
         waveSpeed: 0.01,
-        noiseAmplitude: 0.6,
+        noiseAmplitude: 2,
         noiseFrequency: 0.002,
         noiseSpeed: 0.003,
         mouseRadius: 60,
@@ -483,6 +483,7 @@
     #hero {
         position: relative;
         width: 100svw;
+        
         height: 60svh;
         min-height: 450px;
         display: flex;
@@ -497,6 +498,8 @@
         left: 0;
         width: 100%;
         height: 100%;
+        padding-left: 10svw;
+
     }
     
     #outline-canvas {
@@ -507,6 +510,8 @@
         height: 100%;
         pointer-events: none;
         z-index: 10;
+        padding-left: 10svw;
+
     }
 
     /* --- MOBILE FALLBACK --- */
