@@ -27,7 +27,34 @@ body {
     color: var(--black);
     font-family: 'Geist', sans-serif;
     overflow-x: hidden;
-    margin: 0; /* Add margin: 0 to override browser defaults */
-    padding: 0; /* Add padding: 0 to override browser defaults */
+    margin: 0;
+    padding: 0;
 }
 
+/* Navigation: Push page content when nav is open */
+#main-content {
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    min-height: 100vh;
+}
+
+body.nav-open #main-content  {
+    transform: translateX(35vw);
+}
+
+/* Responsive nav push */
+@media (max-width: 768px) {
+    body.nav-open #main-content  {
+        transform: translateX(80vw);
+    }
+}
+
+/* Typography: Prevent widows and orphans site-wide */
+h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance; /* Balance line lengths for headlines */
+}
+
+p {
+    text-wrap: pretty; /* Better line breaks for body copy */
+    orphans: 3; /* Fallback for older browsers */
+    widows: 3; /* Fallback for older browsers */
+}

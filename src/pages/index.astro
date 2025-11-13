@@ -1,43 +1,39 @@
 ---
 // src/pages/index.astro
-// This is your main page, which assembles the components.
+// This is your main page, updated to use Tina CMS data
 import Layout from '../layouts/Layout.astro';
 import HeroWebGL from '../components/HeroWebGL.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import { readdirSync, readFileSync } from 'fs';
+import { join } from 'path';
 
-// We define the project data here as an array of objects
-const projects = [
-  {
-    category: "Live Events",
-    title: "The Gathering at the Poet’s Shack",
-    tags: ["Media Servers", "d3", "Notch"]
-  },
-  {
-    category: "Installation",
-    title: "Dancing with the Stars Disney100 Night",
-    tags: ["TouchDesigner", "Projection Mapping", "NDI"]
-  },
-  {
-    category: "Broadcast",
-    title: "Hydrogen Jukebox",
-    tags: ["Unreal Engine", "LED Walls", "Real-time VFX"]
-  },
-  {
-    category: "Concert",
-    title: "Festival Headliner",
-    tags: ["Systems Integration", "Resolume", "IMAG"]
-  },
-  {
-    category: "Experiential",
-    title: "Brand Activation",
-    tags: ["TouchDesigner", "Interactive", "Kinect"]
-  },
-  {
-    category: "Corporate",
-    title: "Product Launch",
-    tags: ["Media Servers", "Disguise", "Motion Graphics"]
-  }
-];
+// Read all project files from the data directory
+const projectsDir = join(process.cwd(), 'src', 'data', 'projects');
+const projectFiles = readdirSync(projectsDir).filter(file => file.endsWith('.json'));
+
+// Load and parse all projects
+const allProjects = projectFiles.map(file => {
+  const content = readFileSync(join(projectsDir, file), 'utf-8');
+  return JSON.parse(content);
+});
+
+// Filter for featured and published projects only
+const projects = allProjects
+  .filter(project => project.featured && project.status === 'published')
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+// Helper function to convert category slug to display name
+function getCategoryDisplay(slug: string): string {
+  const categoryMap: Record<string, string> = {
+    'live-events': 'Live Events',
+    'installation': 'Installation',
+    'broadcast': 'Broadcast',
+    'concert': 'Concert',
+    'experiential': 'Experiential',
+    'corporate': 'Corporate'
+  };
+  return categoryMap[slug] || slug;
+}
 ---
 <!-- We wrap everything in the Layout component -->
 <Layout title="Nate Wilkens - Portfolio">
@@ -54,14 +50,15 @@ const projects = [
     
     <div class="project-grid">
       <!-- 
-        We map over the projects array and render a ProjectCard
+        We map over the projects array from Tina and render a ProjectCard
         component for each one, passing in the data as props.
       -->
       {projects.map(project => (
         <ProjectCard 
-          category={project.category} 
+          category={getCategoryDisplay(project.category)} 
           title={project.title} 
-          tags={project.tags} 
+          tags={project.tags}
+          slug={project.slug}
         />
       ))}
     </div>
@@ -108,7 +105,7 @@ const projects = [
   }
   
   .section-header {
-      margin-bottom: 20px;
+      margin-bottom: 40px;
   }
   
   .year-label {
@@ -116,26 +113,23 @@ const projects = [
       font-size: 0.75rem;
       letter-spacing: 0.05em;
       text-transform: uppercase;
+      margin-bottom: 0.5rem;
       font-weight: 500;
-      margin: 0;
-    }
+  }
   
   .section-title {
       font-family: 'Geist', sans-serif;
       font-weight: 700;
-      font-size: clamp(2rem, 12svw, 7rem);
+      font-size: clamp(2rem, 8svw, 5rem);
       letter-spacing: -0.03em;
       line-height: 1.1;
-      margin: 2rem 0;
-      margin-bottom:5rem;
-    }
+  }
   
   .project-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
       gap: 40px 30px;
       max-width: 1400px;
-      padding-left: 10svw;
       /* This prevents items from stretching to the tallest height */
       align-items: start;
   }

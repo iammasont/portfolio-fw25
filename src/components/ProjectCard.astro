@@ -6,21 +6,30 @@ export interface Props {
   category: string;
   title: string;
   tags: string[];
+  slug: string;
 }
-const { category, title, tags } = Astro.props;
+const { category, title, tags, slug } = Astro.props;
 ---
-<div class="project-card" data-hover="true">
-    <div class="project-category">{category}</div>
-    <h3 class="project-title">{title}</h3>
-    <div class="project-tags">
-        <!-- We loop over the tags array prop -->
-        {tags.map(tag => (
-            <span class="tag">{tag}</span>
-        ))}
-    </div>
-</div>
+<a href={`/work/${slug}`} class="project-card-link">
+  <div class="project-card" data-hover="true">
+      <div class="project-category">{category}</div>
+      <h3 class="project-title">{title}</h3>
+      <div class="project-tags">
+          <!-- We loop over the tags array prop -->
+          {tags.map(tag => (
+              <span class="tag">{tag}</span>
+          ))}
+      </div>
+  </div>
+</a>
 
 <style>
+    .project-card-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
     /* All styles from .project-card and its children are scoped here */
     .project-card {
         position: relative;
@@ -56,16 +65,17 @@ const { category, title, tags } = Astro.props;
         transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    .project-card:hover {
+    .project-card-link:hover .project-card {
         background: rgba(0,0,0,0.1); 
-        padding-left: 26px; 
+        padding-left: 32px; /* Increased from 26px to prevent wrapping */
+        padding-right: 8px; /* Add slight right padding too */
     }
 
-    .project-card:hover::before {
+    .project-card-link:hover .project-card::before {
         width: 18px; 
     }
 
-    .project-card:hover::after {
+    .project-card-link:hover .project-card::after {
         left: 2px; 
         opacity: 1;
     }

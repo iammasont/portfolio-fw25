@@ -1,0 +1,30 @@
+fragment ProjectParts on Project {
+  __typename
+  title
+  slug
+  featured
+  status
+  date
+  category
+  tagline
+  client
+  shortDescription
+  description
+  credits
+  tags
+  heroImage
+  gallery {
+    __typename
+    layout
+    type
+    image
+    videoUrl
+    caption
+  }
+}
+
+fragment SettingsParts on Settings {
+  __typename
+  categories
+  availableTags
+}

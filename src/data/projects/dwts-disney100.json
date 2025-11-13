@@ -1,0 +1,120 @@
+{
+  "title": "Dancing with the Stars Disney100 Night",
+  "slug": "dwts-disney100",
+  "featured": true,
+  "status": "published",
+  "date": "2024-09-20T00:00:00.000Z",
+  "category": "broadcast",
+  "tagline": "Celebrating Disney's centennial with interactive projection magic",
+  "client": "ABC Network",
+  "shortDescription": "A landmark broadcast event featuring real-time projection mapping, NDI workflows, and TouchDesigner-driven interactive elements that responded to dancer movements across multiple stages.",
+  "description": {
+    "type": "root",
+    "children": [
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "For Disney's 100th anniversary celebration on Dancing with the Stars, we designed and executed a comprehensive visual system that brought iconic Disney moments to life through cutting-edge projection technology. The challenge was creating a system that could adapt in real-time to choreography while maintaining broadcast quality standards."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "Our TouchDesigner-based system processed multiple NDI video streams, tracking dancer positions and translating movement data into reactive projection content. This allowed us to create magical moments where projections appeared to respond to the performers' gestures, enhancing the storytelling without overwhelming the choreography."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "The technical complexity was significant - we managed 12 synchronized projectors across three stages, all while maintaining frame-accurate timing for broadcast. The result was a seamless integration of physical performance and digital magic that captured the wonder of Disney's century of storytelling."
+          }
+        ]
+      }
+    ]
+  },
+  "credits": {
+    "type": "root",
+    "children": [
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "Executive Producer: Michael Stevens"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "Technical Director: Nate Wilkens"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "Projection Designer: Lisa Park"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "TouchDesigner Developer: Chris Wong"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "Broadcast Engineer: David Martinez"
+          }
+        ]
+      }
+    ]
+  },
+  "tags": [
+    "TouchDesigner",
+    "Projection Mapping",
+    "NDI",
+    "Real-time VFX"
+  ],
+  "heroImage": "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1600&h=900&fit=crop",
+  "gallery": [
+    {
+      "layout": "full",
+      "type": "image",
+      "image": "https://images.unsplash.com/photo-1598387993441-a364f854c3e1?w=1600&h=900&fit=crop",
+      "caption": "Multi-stage projection setup during rehearsal"
+    },
+    {
+      "layout": "half",
+      "type": "image",
+      "image": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=1600&h=900&fit=crop",
+      "caption": "Live broadcast moment with reactive projections"
+    },
+    {
+      "layout": "half",
+      "type": "image",
+      "image": "https://images.unsplash.com/photo-1485579149621-3123dd979885?w=1600&h=900&fit=crop",
+      "caption": "Behind-the-scenes technical setup"
+    }
+  ]
+}

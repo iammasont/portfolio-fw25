@@ -98,7 +98,7 @@ body.is-clicking #cursor-chaser {
     image-rendering: crisp-edges;
     opacity: 0.6;
     transform: translate(-50%, -50%);
-    transition: opacity 0.2s ease-out;
+    transition: background-color 0.3s ease-out, opacity 0.2s ease-out;
 }
 </style>
 
@@ -198,6 +198,7 @@ function initCursor() {
                 // Create new block
                 block = document.createElement('div');
                 block.className = 'trail-block';
+                block.style.transition = 'background-color 0.3s ease-out';
                 trailContainer.appendChild(block);
                 trailBlocks[index] = block;
             }

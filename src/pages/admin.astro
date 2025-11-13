@@ -1,0 +1,22 @@
+---
+// src/pages/admin.astro
+// Redirects /admin to /admin/index.html where Tina lives
+---
+
+<script is:inline>
+    window.location.href = '/admin/index.html';
+  </script>
+  
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="refresh" content="0; url=/admin/index.html">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Redirecting to Tina CMS...</title>
+  </head>
+  <body>
+      <p>Redirecting to Tina CMS...</p>
+      <p>If you're not redirected, <a href="/admin/index.html">click here</a>.</p>
+  </body>
+  </html>

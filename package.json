@@ -1,14 +1,17 @@
 {
-  "name": "regular-ring",
+  "name": "nate-wilkens-portfolio",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
+    "dev": "tinacms dev -c \"astro dev\"",
+    "dev:astro": "astro dev",
+    "build": "tinacms build && astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.15.4"
+    "astro": "^5.15.4",
+    "tinacms": "^2.2.10",
+    "@tinacms/cli": "^1.6.9"
   }
 }

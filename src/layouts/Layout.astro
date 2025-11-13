@@ -3,6 +3,7 @@
 // This is the main HTML shell for all pages.
 import '../styles/global.css';
 import CustomCursor from '../components/CustomCursor.astro';
+import Navigation from '../components/Navigation.astro';
 
 export interface Props {
 	title: string;
@@ -23,10 +24,120 @@ const { title } = Astro.props;
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+		
+		<!-- Global cursor color detection -->
+		<script is:inline>
+			function initCursorColorDetection() {
+				let isOverNav = false;
+				
+				function checkNavHover(x, y) {
+					const overlay = document.getElementById('nav-overlay');
+					if (!overlay) return;
+					
+					const rect = overlay.getBoundingClientRect();
+					const overNav = x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+					
+					if (overNav !== isOverNav) {
+						isOverNav = overNav;
+						
+						const dot = document.getElementById('cursor-dot');
+						const chaser = document.getElementById('cursor-chaser');
+						const trailBlocks = document.querySelectorAll('.trail-block');
+						
+						if (dot && chaser) {
+							if (isOverNav) {
+								// Change to red
+								dot.style.backgroundColor = 'var(--red)';
+								chaser.style.borderColor = 'var(--red)';
+								trailBlocks.forEach(block => {
+									block.style.backgroundColor = 'var(--red)';
+								});
+							} else {
+								// Change back to black
+								dot.style.backgroundColor = 'var(--black)';
+								chaser.style.borderColor = 'var(--black)';
+								trailBlocks.forEach(block => {
+									block.style.backgroundColor = 'var(--black)';
+								});
+							}
+						}
+					}
+				}
+				
+				window.addEventListener('mousemove', (e) => {
+					checkNavHover(e.clientX, e.clientY);
+				});
+			}
+			
+			document.addEventListener('astro:page-load', initCursorColorDetection);
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', initCursorColorDetection);
+			} else {
+				initCursorColorDetection();
+			}
+		</script>
 	</head>
 	<body>
-        
-		<slot /> <!-- Your page content will be injected here -->
-        <CustomCursor />
+        <Navigation />
+		<div id="page-wrapper">
+			<main id="main-content">
+				<slot /> <!-- Your page content will be injected here -->
+			</main>
+			<CustomCursor />
+		</div>
+		
+		<!-- Global script for cursor color change on nav hover -->
+		<script is:inline>
+			function initCursorNavDetection() {
+				let isOverNav = false;
+				
+				function checkNavHover(x, y) {
+					const overlay = document.getElementById('nav-overlay');
+					if (!overlay) return;
+					
+					const rect = overlay.getBoundingClientRect();
+					const overNav = x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+					
+					if (overNav !== isOverNav) {
+						isOverNav = overNav;
+						
+						const dot = document.getElementById('cursor-dot');
+						const chaser = document.getElementById('cursor-chaser');
+						const trailBlocks = document.querySelectorAll('.trail-block');
+						
+						if (dot && chaser) {
+							if (isOverNav) {
+								// Change to red
+								dot.style.backgroundColor = 'var(--red)';
+								chaser.style.borderColor = 'var(--red)';
+								trailBlocks.forEach(block => {
+									block.style.backgroundColor = 'var(--red)';
+								});
+							} else {
+								// Change back to black
+								dot.style.backgroundColor = 'var(--black)';
+								chaser.style.borderColor = 'var(--black)';
+								trailBlocks.forEach(block => {
+									block.style.backgroundColor = 'var(--black)';
+								});
+							}
+						}
+					}
+				}
+				
+				// Check on every mouse move
+				window.addEventListener('mousemove', (e) => {
+					checkNavHover(e.clientX, e.clientY);
+				});
+			}
+			
+			// Initialize
+			document.addEventListener('astro:page-load', initCursorNavDetection);
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', initCursorNavDetection);
+			} else {
+				initCursorNavDetection();
+			}
+		</script>
 	</body>
 </html>

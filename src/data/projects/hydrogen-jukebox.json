@@ -1,0 +1,126 @@
+{
+  "title": "Hydrogen Jukebox",
+  "slug": "hydrogen-jukebox",
+  "featured": true,
+  "status": "published",
+  "date": "2024-03-10T00:00:00.000Z",
+  "category": "installation",
+  "tagline": "A permanent Unreal Engine-powered installation exploring energy and transformation",
+  "client": "Museum of Contemporary Art",
+  "shortDescription": "A permanent museum installation utilizing Unreal Engine and LED walls to create an ever-evolving meditation on energy, transformation, and the hydrogen economy.",
+  "description": {
+    "type": "root",
+    "children": [
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "Hydrogen Jukebox represents a new paradigm in permanent museum installations - a system designed to run continuously for years while never repeating the same visual sequence twice. Built entirely in Unreal Engine, the installation generates real-time visualizations that respond to live data feeds about energy production, weather patterns, and atmospheric conditions."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "The technical architecture required careful consideration of thermal management, redundancy, and graceful degradation. We implemented a dual-system approach where a primary workstation handles the complex Unreal Engine rendering while a backup system monitors health and can seamlessly take over if needed. The 40-foot LED wall installation demanded precise color calibration and real-time performance optimization."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "Beyond the technical achievement, the project succeeds in creating a contemplative space where visitors can engage with abstract concepts about energy and sustainability through beautiful, ever-changing imagery. The installation has been running continuously for eight months with zero downtime."
+          }
+        ]
+      }
+    ]
+  },
+  "credits": {
+    "type": "root",
+    "children": [
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "Artistic Director: Rebecca Thompson"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "Technical Lead: Nate Wilkens"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "Unreal Developer: Kevin Nguyen"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "LED Systems: Sarah Kim"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "Data Visualization: James Lee"
+          }
+        ]
+      }
+    ]
+  },
+  "tags": [
+    "Unreal Engine",
+    "LED Walls",
+    "Real-time VFX",
+    "Systems Integration"
+  ],
+  "heroImage": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&h=900&fit=crop",
+  "gallery": [
+    {
+      "layout": "full",
+      "type": "image",
+      "image": "https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=1600&h=900&fit=crop",
+      "caption": "Installation view showing 40-foot LED wall"
+    },
+    {
+      "layout": "half",
+      "type": "image",
+      "image": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&h=900&fit=crop",
+      "caption": "Detail of real-time generative visuals"
+    },
+    {
+      "layout": "half",
+      "type": "image",
+      "image": "https://images.unsplash.com/photo-1617791160588-241658c0f566?w=1600&h=900&fit=crop",
+      "caption": "Visitors engaging with the installation"
+    },
+    {
+      "layout": "full",
+      "type": "image",
+      "image": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1600&h=900&fit=crop",
+      "caption": "Technical infrastructure and redundancy systems"
+    }
+  ]
+}

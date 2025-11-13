@@ -1,0 +1,218 @@
+---
+// src/components/Navigation.astro
+// Fixed navigation with slide-out menu
+---
+
+<!-- Nav Toggle Button (Fixed) -->
+<button id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation" data-hover="true">
+    <span class="nav-icon">+</span>
+  </button>
+  
+  <!-- Navigation Overlay -->
+  <nav id="nav-overlay" class="nav-overlay">
+    <div class="nav-content">
+      <ul class="nav-list">
+        <li><a href="/" class="nav-link" data-hover="true">Home</a></li>
+        <li><a href="/work" class="nav-link" data-hover="true">Work</a></li>
+        <li><a href="/info" class="nav-link" data-hover="true">Info</a></li>
+        <li><a href="/contact" class="nav-link" data-hover="true">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+  
+  <style>
+    /* Nav Toggle Button */
+    .nav-toggle {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 40px;
+      z-index: 10001;
+      background: none;
+      border: none;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: none;
+    }
+  
+    .nav-icon {
+      font-family: 'Geist', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 300;
+      line-height: 1;
+      color: var(--black);
+      transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.3s ease-out;
+      display: block;
+    }
+  
+    /* Change to red when nav is open */
+    body.nav-open .nav-icon {
+      color: var(--red);
+    }
+  
+    /* Rotate to X when nav is open */
+    body.nav-open .nav-icon {
+      transform: rotate(45deg);
+    }
+  
+    /* Nav Overlay */
+    .nav-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 35vw;
+      height: 100vh;
+      background: var(--black);
+      z-index: 10000;
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      overflow: hidden;
+    }
+  
+    body.nav-open .nav-overlay {
+      transform: translateX(0); /* Simple slide in */
+    }
+  
+    .nav-content {
+      padding: 120px 60px 60px 120px; /* Extra left padding for the button space */
+      height: 100%;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      flex-direction: column;
+    }
+  
+    .nav-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+    }
+  
+    .nav-list li {
+      margin-bottom: 24px;
+    }
+  
+    .nav-list li:last-child {
+      margin-bottom: 0;
+    }
+  
+    .nav-link {
+      font-family: 'Geist', sans-serif;
+      font-weight: 700;
+      font-size: clamp(3rem, 6vw, 6rem);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--red);
+      text-decoration: none;
+      display: inline-block;
+      transition: color 0.2s ease-out;
+      text-wrap: balance;
+      position: relative;
+    }
+  
+    .nav-link:hover {
+      color: white;
+    }
+  
+    /* Small label hint */
+    .nav-link::after {
+      content: attr(data-label);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      position: absolute;
+      right: -40px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0;
+      transition: opacity 0.2s ease-out;
+    }
+  
+    .nav-link:hover::after {
+      opacity: 0.5;
+    }
+  
+    /* Push entire HTML element (includes fixed elements) */
+    /* Note: This is handled in global.css for proper scope */
+  
+    /* Remove old main-content transform */
+    #main-content {
+      /* No transform needed - html handles it in global.css */
+    }
+  
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-toggle {
+        top: 50%;
+        transform: translateY(-50%);
+        left: 24px;
+        width: 32px;
+        height: 32px;
+      }
+  
+      .nav-icon {
+        font-size: 2rem;
+      }
+  
+      .nav-overlay {
+        width: 80vw;
+      }
+  
+      .nav-content {
+        padding: 80px 40px 40px 80px;
+      }
+  
+      .nav-link {
+        font-size: clamp(2rem, 10vw, 3rem);
+      }
+  
+      .nav-list li {
+        margin-bottom: 16px;
+      }
+    }
+  </style>
+  
+  <script is:inline>
+    function initNavigation() {
+      const toggle = document.getElementById('nav-toggle');
+      const overlay = document.getElementById('nav-overlay');
+      const navLinks = document.querySelectorAll('.nav-link');
+      
+      if (!toggle || !overlay) return;
+  
+      // Toggle nav on button click
+      toggle.addEventListener('click', () => {
+        document.body.classList.toggle('nav-open');
+      });
+  
+      // Close nav when clicking a link
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          document.body.classList.remove('nav-open');
+        });
+      });
+  
+      // Close nav on escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && document.body.classList.contains('nav-open')) {
+          document.body.classList.remove('nav-open');
+        }
+      });
+    }
+  
+    // Initialize on page load
+    document.addEventListener('astro:page-load', initNavigation);
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initNavigation);
+    } else {
+      initNavigation();
+    }
+  </script>
