@@ -1,0 +1,84 @@
+---
+// src/components/SmoothScroll.astro
+// Initializes Lenis smooth scrolling
+---
+
+<script>
+    import Lenis from 'lenis';
+    
+    let lenis: Lenis | null = null;
+    
+    function initLenis() {
+      // Destroy existing instance if it exists
+      if (lenis) {
+        lenis.destroy();
+      }
+      
+      // Initialize Lenis
+      lenis = new Lenis({
+        duration: 1.2,          // Animation duration (seconds)
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Custom easing
+        orientation: 'vertical', // Scroll direction
+        gestureOrientation: 'vertical',
+        smoothWheel: true,       // Smooth scroll with mouse wheel
+        wheelMultiplier: 1,      // Mouse wheel sensitivity
+        // smoothTouch: false,      // Don't smooth on touch devices (feels more natural)
+        touchMultiplier: 2,
+        infinite: false,
+      });
+      
+      // Request animation frame loop
+      function raf(time: number) {
+        lenis?.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+      
+      // Integrate with GSAP ScrollTrigger if it exists
+      if (typeof window !== 'undefined' && (window as any).ScrollTrigger) {
+        lenis.on('scroll', (window as any).ScrollTrigger.update);
+      }
+    }
+    
+    // Initialize on page load
+    document.addEventListener('astro:page-load', initLenis);
+    
+    // Initialize immediately if DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initLenis);
+    } else {
+      initLenis();
+    }
+    
+    // Clean up before page navigation
+    document.addEventListener('astro:before-preparation', () => {
+      if (lenis) {
+        lenis.destroy();
+        lenis = null;
+      }
+    });
+  </script>
+  
+  <style>
+    /* Ensure smooth scrolling is enabled */
+    html.lenis,
+    html.lenis body {
+      height: auto;
+    }
+    
+    .lenis.lenis-smooth {
+      scroll-behavior: auto !important;
+    }
+    
+    .lenis.lenis-smooth [data-lenis-prevent] {
+      overscroll-behavior: contain;
+    }
+    
+    .lenis.lenis-stopped {
+      overflow: hidden;
+    }
+    
+    .lenis.lenis-scrolling iframe {
+      pointer-events: none;
+    }
+  </style>
