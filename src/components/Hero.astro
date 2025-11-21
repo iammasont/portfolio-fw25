@@ -1,60 +1,103 @@
 ---
 // src/components/Hero.astro
-// Clean typography-focused hero (no WebGL)
+// Clean typography-focused hero with blur scroll effect
 ---
 
 <section id="hero">
-    <div class="hero-content">
-      <h1 class="hero-text">
-        I help artists and causes create tangible experiences that demand attention and intimacy, to affect change locally and around the world.
-      </h1>
-    </div>
-  </section>
+  <div class="hero-content">
+    <h1 class="hero-text" data-blur-scroll>
+      I help artists and causes create tangible experiences that demand attention and intimacy, to affect change locally and around the world.
+    </h1>
+  </div>
+</section>
+
+<style>
+  #hero {
+    position: relative;
+    width: 100%;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 5vw 60px; /* Reduced bottom padding */
+  }
+
+  .hero-content {
+    max-width: 100%; /* Full width */
+    margin: 0;
+    width: 100%;
+  }
+
+  .hero-text {
+    font-family: 'Geist', sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.5rem, 7vw, 6.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--black);
+    margin: 0;
+    max-width: 100%; /* Allow full width within container */
+    /* Let text flow naturally - no flex needed */
+  }
   
-  <style>
+  /* Ensure line/word/char spans inherit styles */
+  .hero-text .line {
+    display: block;
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+  }
+  
+  .hero-text .word {
+    display: inline-block;
+    white-space: nowrap; /* Keep characters within a word together */
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+  }
+  
+  .hero-text .char {
+    display: inline-block;
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+  }
+  
+  .hero-text .space {
+    display: inline-block;
+    width: 0.3em; /* Space between words */
+  }
+  
+  /* Remove any leading space indent */
+  .hero-text .space:first-child {
+    display: none;
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
     #hero {
-      position: relative;
-      width: 100%;
-      min-height: 60vh;
-      display: flex;
-      align-items: center;
-      padding: 120px 5vw 60px; /* Reduced bottom padding */
+      min-height: 50vh;
+      padding: 100px 5vw 60px;
     }
-  
-    .hero-content {
-      max-width: 100%; /* Full width */
-      margin: 0;
-      width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    #hero {
+      min-height: 40vh;
+      padding: 100px 5vw 40px;
     }
-  
+
     .hero-text {
-      font-family: 'Geist', sans-serif;
-      font-weight: 700;
-      font-size: clamp(2.5rem, 7vw, 6.5rem);
-      line-height: 0.95;
-      letter-spacing: -0.02em;
-      color: var(--black);
-      margin: 0;
-      text-wrap: balance;
-      max-width: 100%; /* Allow full width within container */
+      font-size: clamp(2rem, 9vw, 4rem);
     }
-  
-    /* Responsive */
-    @media (max-width: 1024px) {
-      #hero {
-        min-height: 50vh;
-        padding: 100px 5vw 60px;
-      }
-    }
-  
-    @media (max-width: 768px) {
-      #hero {
-        min-height: 40vh;
-        padding: 80px 5vw 40px;
-      }
-  
-      .hero-text {
-        font-size: clamp(2rem, 9vw, 4rem);
-      }
-    }
-  </style>
+  }
+</style>
+

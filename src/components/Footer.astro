@@ -1,6 +1,7 @@
 ---
 // src/components/Footer.astro
 // Fixed footer with gradient overlay (transparent → orange)
+// Mobile: Slides up from below screen on tap
 ---
 
 <footer id="main-footer">
@@ -16,6 +17,14 @@
     <div class="blur-filter"></div>
     <div class="blur-filter"></div>
   </div>
+  
+  <!-- Mobile Toggle Button (only visible on mobile) -->
+  <button id="footer-toggle" class="footer-toggle" aria-label="Toggle footer">
+    <svg class="chevron-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M18 15L12 9L6 15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
   <div class="footer-content">
     <div class="footer-left">
       <p class="footer-bio">
@@ -31,12 +40,121 @@
     </div>
     <div class="footer-right">
       <a href="/cv" class="footer-link" data-hover="true">Download CV</a>
-      <p class="footer-copyright">©2025<br>All Rights Reserved</p>
+      <p class="footer-copyright">©2025 All Rights Reserved</p>
     </div>
   </div>
 </footer>
 
+<script>
+  function initFooterToggle() {
+    const footer = document.getElementById('main-footer');
+    const toggle = document.getElementById('footer-toggle');
+    
+    if (!footer || !toggle) return;
+    
+    // Only run on mobile
+    const isMobile = () => window.innerWidth <= 768;
+    
+    if (isMobile()) {
+      footer.classList.add('mobile-hidden');
+    }
+    
+    toggle.addEventListener('click', () => {
+      if (isMobile()) {
+        footer.classList.toggle('mobile-hidden');
+      }
+    });
+    
+    // Handle resize
+    let resizeTimer: number;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        if (!isMobile()) {
+          footer.classList.remove('mobile-hidden');
+        }
+      }, 250);
+    });
+  }
+  
+  document.addEventListener('astro:page-load', initFooterToggle);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFooterToggle);
+  } else {
+    initFooterToggle();
+  }
+</script>
+
 <style>
+  :root {
+    --ease-out-timing: cubic-bezier(0.165, 0.84, 0.44, 1);
+    --footer-transition: 0.6s var(--ease-out-timing);
+  }
+
+  /* Fixed Footer */
+  #main-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    pointer-events: none; /* Allow clicks through gradient */
+    transition: transform var(--footer-transition);
+  }
+
+  /* Mobile: Hide footer below screen by default */
+  @media (max-width: 768px) {
+    #main-footer.mobile-hidden {
+      transform: translateY(calc(100% - 20px)); /* Show less - just icon peek */
+    }
+  }
+
+  /* Mobile Toggle Button */
+  .footer-toggle {
+    display: none; /* Hidden on desktop */
+    position: absolute;
+    top: -32px; /* Closer to footer content */
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    height: auto;
+    background: transparent; /* No background */
+    border: none; /* No border */
+    cursor: pointer;
+    pointer-events: auto;
+    z-index: 10;
+    transition: transform var(--footer-transition), opacity 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px; /* Minimal padding */
+    opacity:0;
+  }
+
+  @media (max-width: 768px) {
+    .footer-toggle {
+      display: flex; /* Show on mobile */
+    }
+  }
+
+  .footer-toggle:hover {
+    opacity: 0.7;
+  }
+
+  .footer-toggle:active {
+    transform: translateX(-50%) scale(0.9);
+  }
+
+  /* Chevron Icon */
+  .chevron-icon {
+    color: var(--black);
+    transition: transform var(--footer-transition);
+  }
+
+  /* Rotate chevron when footer is open */
+  #main-footer:not(.mobile-hidden) .chevron-icon {
+    transform: rotate(180deg);
+  }
   /* Fixed Footer */
   #main-footer {
     position: fixed;
@@ -47,7 +165,7 @@
     pointer-events: none; /* Allow clicks through gradient */
   }
 
-  /* Gradient Container */
+  /* Gradient Container - scales up on smaller screens */
   .footer-gradient-container {
     position: absolute;
     bottom: 0;
@@ -55,6 +173,20 @@
     width: 100%;
     height: 120px;
     pointer-events: none;
+  }
+
+  /* Scale up gradient on tablet */
+  @media (max-width: 1024px) {
+    .footer-gradient-container {
+      height: 180px;
+    }
+  }
+
+  /* Scale up more on mobile */
+  @media (max-width: 768px) {
+    .footer-gradient-container {
+      height: 240px;
+    }
   }
 
   /* Color gradient layer */
@@ -261,11 +393,11 @@
     opacity: 0.6;
   }
 
-  /* Responsive */
+  /* Responsive - Tablet */
   @media (max-width: 1024px) {
     .footer-content {
       grid-template-columns: 1fr;
-      gap: 20px;
+      gap: 16px; /* Tighter spacing on tablet */
       text-align: left;
     }
 
@@ -277,13 +409,83 @@
     }
   }
 
-  @media (max-width: 768px) {
+  /* Responsive - Small Tablet (handles the awkward wrapping zone) */
+  @media (max-width: 960px) {
     .footer-gradient-container {
-      height: 100px;
+      height: 200px; /* Intermediate height */
     }
 
     .footer-content {
+      /* Switch to 2-column earlier to prevent wrapping */
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 12px 16px;
+    }
+
+    .footer-left {
+      grid-column: 1 / -1;
+      grid-row: 1;
+    }
+
+    .footer-center {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .footer-right {
+      grid-column: 2;
+      grid-row: 2;
+      align-items: flex-end;
+      text-align: right;
+    }
+
+    .footer-bio,
+    .footer-location,
+    .footer-copyright,
+    .footer-link {
+      font-size: 0.6875rem; /* Slightly smaller to prevent wrapping */
+    }
+  }
+
+  /* Responsive - Mobile */
+  @media (max-width: 768px) {
+    .footer-toggle{
+      opacity:1;
+    }
+    .footer-bio {
+    max-width: 45ch; /* Adjust this value to control line breaks */
+    text-align: center;
+    align-self: center;
+    letter-spacing: -.25px;
+  }
+    .footer-content {
+      /* New layout: bio spans top, location left / copyright right on bottom */
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 10px 16px; /* Tighter vertical gap, horizontal gap between location/copyright */
       padding: 20px 5vw;
+    }
+
+    /* Bio spans full width on top */
+    .footer-left {
+      grid-column: 1 / -1;
+      grid-row: 1;
+    }
+
+    /* Location on bottom left */
+    .footer-center {
+      grid-column: 1;
+      grid-row: 2;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    /* Copyright + CV link on bottom right */
+    .footer-right {
+      grid-column: 2;
+      grid-row: 2;
+      align-items: flex-end;
+      text-align: right;
     }
 
     .footer-bio br,
@@ -296,7 +498,8 @@
     .footer-location,
     .footer-copyright,
     .footer-link {
-      font-size: 0.625rem;
+      font-size: 0.65rem;
+      line-height: 1.3; /* Tighter line height on mobile */
     }
   }
 </style>

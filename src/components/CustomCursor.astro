@@ -24,7 +24,6 @@
         height: var(--dot-size);
         background-color: var(--black);
         border-radius: 50%;
-        /* NO CSS TRANSITION here. Movement is instantaneous via JS. */
         transform: translate(-50%, -50%); 
         z-index: 10002; /* Above everything */
         pointer-events: none;
@@ -43,9 +42,19 @@
         opacity: 0.5;
         z-index: 10001; 
         pointer-events: none;
-        /* The transform is applied in JavaScript with easing */
         transform: translate(-50%, -50%); 
     }
+
+    @media (hover: none) and (pointer: coarse) {
+        #custom-dot,
+        #trailing-ring {
+            display: none;
+        }
+        
+        body {
+            cursor: auto !important;
+        }
+        }
 </style>
 
 <script>

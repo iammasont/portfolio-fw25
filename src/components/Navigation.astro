@@ -121,7 +121,7 @@
     align-items: center;
     background: none;
     border: 1px solid transparent;
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem 0;
     border-radius: 0.5rem;
     color: #000;
     position: relative;
@@ -143,6 +143,7 @@
     transform: translateX(0);
     will-change: transform;
     transition: transform var(--transition-speed) var(--ease-out-timing), margin var(--transition-speed) var(--ease-out-timing);
+    
   }
 
   .plus-icon {
@@ -179,6 +180,7 @@
     font-size: 0.875rem;
     font-weight: 700;
     transition: color 0.2s;
+    transform: translateY(2px);
   }
 
   /* Create the line */
@@ -244,7 +246,44 @@
     .nav-blur-clip { height: var(--header-height-mobile); }
     #nav-content-wrapper { padding: 20px 5vw; }
     .nav-toggle { font-size: 1.25rem; }
+  
   }
+
+  @media (max-width: 768px) {
+  /* Keep toggle on the right side always */
+  .nav-toggle {
+    position: fixed;
+    right: 2vw;
+    top: 12px;
+  }
+  
+  /* Create blur overlay that covers the nav area */
+  .nav-toggle.is-active::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--header-height-mobile);
+    background: rgba(208, 92, 42, 0.25);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: -1;
+    pointer-events: none;
+  }
+  
+  /* Ensure toggle content stays above blur */
+  .nav-toggle.is-active > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* Keep wrapper fixed */
+#nav-content-wrapper {
+  position: fixed;
+  z-index: 10001;
+}
 </style>
 
 <script is:inline>
@@ -254,51 +293,51 @@
 
     if (toggle._clickHandler) toggle.removeEventListener('click', toggle._clickHandler);
 
-    const clickHandler = (e) => {
-      e.stopPropagation();
-      
-      const navLinks = toggle.querySelector('.inline-nav-links');
-      const leftBracket = toggle.querySelector('.bracket.left');
-      const openBracketMarginRight = 24; 
+      const clickHandler = (e) => {
+        e.stopPropagation();
+        
+        const navLinks = toggle.querySelector('.inline-nav-links');
+        const leftBracket = toggle.querySelector('.bracket.left');
+        const openBracketMarginRight = 24; 
 
-      if (!navLinks || !leftBracket) return;
+        if (!navLinks || !leftBracket) return;
 
-      const isCurrentlyActive = toggle.classList.contains('is-active');
+        const isCurrentlyActive = toggle.classList.contains('is-active');
 
-      if (!isCurrentlyActive) {
-        // --- OPENING SEQUENCE ---
-        toggle.classList.add('measuring');
-        navLinks.style.maxWidth = 'fit-content';
+        if (!isCurrentlyActive) {
+          // --- OPENING SEQUENCE ---
+          toggle.classList.add('measuring');
+          navLinks.style.maxWidth = 'fit-content';
 
-        const linksWidthPx = navLinks.scrollWidth;
-        const leftBracketRect = leftBracket.getBoundingClientRect();
-        const navLinksRect = navLinks.getBoundingClientRect();
-        const shiftPx = (leftBracketRect.left - navLinksRect.left) + openBracketMarginRight;
+          const linksWidthPx = navLinks.scrollWidth;
+          const leftBracketRect = leftBracket.getBoundingClientRect();
+          const navLinksRect = navLinks.getBoundingClientRect();
+          const shiftPx = (leftBracketRect.left - navLinksRect.left) + openBracketMarginRight;
 
-        toggle.style.setProperty('--links-max-width', `${linksWidthPx}px`);
-        toggle.style.setProperty('--links-shift-x', `${shiftPx}px`);
+          toggle.style.setProperty('--links-max-width', `${linksWidthPx}px`);
+          toggle.style.setProperty('--links-shift-x', `${shiftPx}px`);
 
-        navLinks.style.removeProperty('max-width');
-        toggle.classList.remove('measuring');
+          navLinks.style.removeProperty('max-width');
+          toggle.classList.remove('measuring');
 
-        void toggle.offsetWidth; 
-        void navLinks.offsetWidth; 
+          void toggle.offsetWidth; 
+          void navLinks.offsetWidth; 
 
-        setTimeout(() => {
-            toggle.classList.add('is-active');
-        }, 20);
+          setTimeout(() => {
+              toggle.classList.add('is-active');
+          }, 20);
 
-      } else {
-        // --- CLOSING SEQUENCE ---
-        toggle.classList.remove('is-active');
-        setTimeout(() => {
-           if(!toggle.classList.contains('is-active')) {
-             toggle.style.removeProperty('--links-max-width');
-             toggle.style.removeProperty('--links-shift-x');
-           }
-        }, 800);
-      }
-    };
+        } else {
+          // --- CLOSING SEQUENCE ---
+          toggle.classList.remove('is-active');
+          setTimeout(() => {
+            if(!toggle.classList.contains('is-active')) {
+              toggle.style.removeProperty('--links-max-width');
+              toggle.style.removeProperty('--links-shift-x');
+            }
+          }, 800);
+        }
+      };
 
     toggle.addEventListener('click', clickHandler);
     toggle._clickHandler = clickHandler;
