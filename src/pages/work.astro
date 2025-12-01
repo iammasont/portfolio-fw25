@@ -1,0 +1,227 @@
+---
+// src/pages/work/index.astro
+import Layout from '../layouts/Layout.astro';
+import { readdirSync, readFileSync } from 'fs';
+import { join } from 'path';
+
+// Read all project files from the data directory
+const projectsDir = join(process.cwd(), 'src', 'data', 'projects');
+const projectFiles = readdirSync(projectsDir).filter(file => file.endsWith('.json'));
+
+// Load and parse all projects
+const allProjects = projectFiles.map(file => {
+  const content = readFileSync(join(projectsDir, file), 'utf-8');
+  return JSON.parse(content);
+});
+
+// Filter for published projects only, sorted by date
+const projects = allProjects
+  .filter(project => project.status === 'published')
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+---
+
+<Layout title="Work - Nate Wilkens">
+  <section id="work-index">
+    
+    <div class="section-header">
+      <span class="section-marker">&gt;&gt;ALL WORK</span>
+      <span class="section-years">20-25&lt;&lt;</span>
+    </div>
+
+    <div class="projects-grid">
+      {projects.map(project => (
+        <a href={`/work/${project.slug}`} class="project-card" data-hover="true">
+          <div class="project-image">
+            <img src={project.heroImage} alt={project.title} />
+          </div>
+          <div class="project-info">
+            <div class="project-meta">
+              <span class="project-client">{project.client}</span>
+              <span class="project-category">{project.category}</span>
+            </div>
+            <h3 class="project-title">{project.title}</h3>
+            {project.tagline && (
+              <p class="project-tagline">{project.tagline}</p>
+            )}
+            <div class="project-tags">
+              {project.tags.slice(0, 3).map((tag: string) => (
+                <span class="tag">{tag}</span>
+              ))}
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+
+  </section>
+</Layout>
+
+<style>
+  #work-index {
+    background: var(--red);
+    color: var(--black);
+    min-height: 100vh;
+    padding: 120px 5vw 120px;
+  }
+
+  /* Section Header */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--black);
+  }
+
+  .section-marker,
+  .section-years {
+    font-family: 'Geist Mono', monospace;
+    font-size: clamp(0.875rem, 1.5vw, 1.25rem);
+    letter-spacing: 0.05em;
+    font-weight: 500;
+    color: var(--black);
+  }
+
+  /* Projects Grid */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 40px;
+    margin-top: 40px;
+  }
+
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: var(--black);
+    transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+
+  .project-card:hover {
+    transform: translateY(-4px);
+  }
+
+  /* Project Image */
+  .project-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.1);
+    margin-bottom: 16px;
+    border-radius: 20px;
+  }
+
+  .project-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+
+  .project-card:hover .project-image img {
+    transform: scale(1.05);
+  }
+
+  /* Project Info */
+  .project-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .project-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .project-client,
+  .project-category {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 500;
+    opacity: 0.7;
+  }
+
+  .project-title {
+    font-family: 'Geist', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .project-tagline {
+    font-family: 'Geist', sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    margin: 0;
+    opacity: 0.8;
+    text-wrap: pretty;
+  }
+
+  /* Tags */
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+  }
+
+  .tag {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.625rem;
+    padding: 0.25rem 0.5rem;
+    background: var(--black);
+    color: var(--red);
+    border-radius: 0.125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-weight: 500;
+  }
+
+  /* Responsive - Tablet */
+  @media (max-width: 1024px) {
+    #work-index {
+      padding: 100px 5vw 100px;
+    }
+
+    .projects-grid {
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 32px;
+    }
+  }
+
+  /* Responsive - Mobile */
+  @media (max-width: 768px) {
+    #work-index {
+      padding: 100px 5vw 80px;
+    }
+
+    .section-header {
+      margin-bottom: 32px;
+      padding-bottom: 12px;
+    }
+
+    .section-marker,
+    .section-years {
+      font-size: clamp(0.75rem, 3vw, 1rem);
+    }
+
+    .projects-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .project-image {
+      aspect-ratio: 4 / 3;
+    }
+  }
+</style>

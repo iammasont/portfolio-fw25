@@ -1,6 +1,6 @@
 ---
 // Clean, performant Custom Cursor (Dot + Trailing Ring)
-// Dependency-Free.
+// Updated to work with Astro View Transitions
 ---
 
 <div id="custom-dot"></div>
@@ -54,11 +54,15 @@
         body {
             cursor: auto !important;
         }
-        }
+    }
 </style>
 
 <script>
     // --- MAIN INITIALIZATION FUNCTION ---
+    let animationFrameId;
+    let mouseMoveHandler;
+    let resizeHandler;
+    
     function init() {
         const dot = document.getElementById('custom-dot');
         const ring = document.getElementById('trailing-ring');
@@ -71,52 +75,66 @@
         // --- INPUT & POSITION STATE ---
         let mousePos = { x: W / 2, y: H / 2 };
         let ringPos = { x: W / 2, y: H / 2 }; 
-        const RING_EASING = 0.15; // Controls the delay/smoothness (lower = slower/more delay)
+        const RING_EASING = 0.15;
         
         let lastTime = performance.now();
         
         // --- HANDLERS ---
-        function handleMouseMove(e) {
-            // 1. Update dot position (INSTANT tracking via style.left/top)
-            // We update left/top, and the CSS transform(-50%, -50%) centers it.
+        mouseMoveHandler = function(e) {
             dot.style.left = `${e.clientX}px`;
             dot.style.top = `${e.clientY}px`;
-            
-            // 2. Update mouse position for ring tracking
             mousePos.x = e.clientX;
             mousePos.y = e.clientY; 
-        }
+        };
 
-        function handleResize() {
+        resizeHandler = function() {
             W = window.innerWidth;
             H = window.innerHeight;
-        }
+        };
 
         function draw(time) {
             const deltaTime = time - lastTime;
             lastTime = time;
             
-            // --- TRAILING RING LOGIC (Smooth Position) ---
-            
-            // Lerp the ring position toward the current mouse position
             ringPos.x += (mousePos.x - ringPos.x) * RING_EASING;
             ringPos.y += (mousePos.y - ringPos.y) * RING_EASING;
 
-            // Apply smoothed position to the trailing ring (adjusting for element size: 32px / 2 = 16px)
-            // Note: We use style.left/top here and let the CSS transform handle centering
             ring.style.left = `${ringPos.x}px`;
             ring.style.top = `${ringPos.y}px`;
             
-            requestAnimationFrame(draw);
+            animationFrameId = requestAnimationFrame(draw);
         }
 
         // --- STARTUP ---
-        window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('resize', handleResize);
+        window.addEventListener('mousemove', mouseMoveHandler);
+        window.addEventListener('resize', resizeHandler);
         
-        handleResize();
+        resizeHandler();
         draw(performance.now());
     }
+    
+    function cleanup() {
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+        if (mouseMoveHandler) {
+            window.removeEventListener('mousemove', mouseMoveHandler);
+        }
+        if (resizeHandler) {
+            window.removeEventListener('resize', resizeHandler);
+        }
+    }
 
-    document.addEventListener('DOMContentLoaded', init);
+    // Initialize on page load (works with View Transitions)
+    document.addEventListener('astro:page-load', init);
+    
+    // Cleanup before navigation
+    document.addEventListener('astro:before-preparation', cleanup);
+    
+    // Initialize immediately if DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 </script>

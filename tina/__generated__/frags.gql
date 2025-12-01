@@ -28,3 +28,15 @@ fragment SettingsParts on Settings {
   categories
   availableTags
 }
+
+fragment InfoParts on Info {
+  __typename
+  bio
+  availability
+  capabilities
+  pressAndAwards {
+    __typename
+    title
+    url
+  }
+}

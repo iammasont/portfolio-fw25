@@ -239,6 +239,80 @@ export default defineConfig({
           },
         ],
       },
+      // Info Page Collection
+      {
+        name: "info",
+        label: "Info Page",
+        path: "src/data",
+        format: "json",
+        ui: {
+          allowedActions: {
+            create: false,
+            delete: false,
+          },
+          global: true,
+        },
+        match: {
+          include: "info",
+        },
+        fields: [
+          {
+            type: "string",
+            name: "bio",
+            label: "Bio",
+            required: true,
+            ui: {
+              component: "textarea",
+              description: "Main bio text (displays at hero scale on info page)",
+            },
+          },
+          {
+            type: "string",
+            name: "availability",
+            label: "Availability Status",
+            required: true,
+            ui: {
+              description: "Current freelance/employment availability",
+            },
+          },
+          {
+            type: "string",
+            name: "capabilities",
+            label: "Capabilities",
+            required: true,
+            list: true,
+            ui: {
+              description: "List of technical capabilities and specializations",
+            },
+          },
+          {
+            type: "object",
+            name: "pressAndAwards",
+            label: "Press & Awards",
+            list: true,
+            ui: {
+              description: "Press mentions, awards, and notable features",
+              itemProps: (item) => {
+                return { label: item?.title || "New Item" };
+              },
+            },
+            fields: [
+              {
+                type: "string",
+                name: "title",
+                label: "Title",
+                required: true,
+              },
+              {
+                type: "string",
+                name: "url",
+                label: "URL",
+                description: "Optional link (leave blank if no URL)",
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
 });

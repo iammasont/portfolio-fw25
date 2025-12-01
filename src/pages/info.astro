@@ -1,0 +1,197 @@
+---
+// src/pages/info.astro
+import Layout from '../layouts/Layout.astro';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+// Read info data from JSON
+const infoPath = join(process.cwd(), 'src', 'data', 'info.json');
+const infoData = JSON.parse(readFileSync(infoPath, 'utf-8'));
+---
+
+<Layout title="Info - Nate Wilkens">
+  <section id="info-page">
+    
+    <!-- Bio Section (Hero Scale) -->
+    <div class="bio-section">
+      <p class="bio-text">{infoData.bio}</p>
+    </div>
+
+    <!-- Horizontal Rule -->
+    <hr class="section-divider" />
+
+    <!-- Three Column Layout -->
+    <div class="info-grid">
+      
+      <!-- Column 1: Availability -->
+      <div class="info-column">
+        <p class="column-content">{infoData.availability}</p>
+      </div>
+
+      <!-- Column 2: Capabilities -->
+      <div class="info-column">
+        <h3 class="column-label">Capabilities</h3>
+        <ul class="capabilities-list">
+          {infoData.capabilities.map((capability: string) => (
+            <li>{capability}</li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Column 3: Press & Awards -->
+      <div class="info-column">
+        <h3 class="column-label">Press & Awards</h3>
+        <ul class="press-list">
+          {infoData.pressAndAwards.map((item: any) => (
+            <li>
+              {item.url ? (
+                <a href={item.url} target="_blank" rel="noopener noreferrer" data-hover="true">
+                  {item.title}
+                </a>
+              ) : (
+                <span>{item.title}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+    </div>
+
+  </section>
+</Layout>
+
+<style>
+  #info-page {
+    background: var(--red);
+    color: var(--black);
+    min-height: 100vh;
+    padding: 120px 5vw 120px;
+  }
+
+  /* Bio Section - Hero Scale */
+  .bio-section {
+    max-width: 100%;
+    margin: 0 0 60px;
+  }
+
+  .bio-text {
+    font-family: 'Geist', sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.5rem, 3vw, 6.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--black);
+    margin: 0;
+    text-wrap: pretty;
+}
+
+  /* Horizontal Rule */
+  .section-divider {
+    border: none;
+    border-top: 2px solid var(--black);
+    margin: 60px 0;
+  }
+
+  /* Three Column Grid */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 60px;
+    max-width: 1400px;
+  }
+
+  .info-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .column-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .column-content {
+    font-family: 'Geist', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* Lists */
+  .capabilities-list,
+  .press-list {
+    font-family: 'Geist', sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.8;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .capabilities-list li,
+  .press-list li {
+    position: relative;
+    padding-left: 0;
+  }
+
+  .press-list a {
+    color: var(--black);
+    text-decoration: underline;
+    transition: opacity 0.2s ease-out;
+  }
+
+  .press-list a:hover {
+    opacity: 0.6;
+  }
+
+  /* Responsive - Tablet */
+  @media (max-width: 1024px) {
+    #info-page {
+      padding: 100px 5vw 100px;
+    }
+
+    .bio-section {
+      margin-bottom: 40px;
+    }
+
+    .section-divider {
+      margin: 40px 0;
+    }
+
+    .info-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+  }
+
+  /* Responsive - Mobile */
+  @media (max-width: 768px) {
+    #info-page {
+      padding: 100px 5vw 80px;
+    }
+
+    .bio-text {
+      font-size: clamp(2rem, 9vw, 4rem);
+    }
+
+    .section-divider {
+      margin: 30px 0;
+    }
+
+    .info-grid {
+      gap: 32px;
+    }
+
+    .column-content,
+    .capabilities-list,
+    .press-list {
+      font-size: 1rem;
+    }
+  }
+</style>

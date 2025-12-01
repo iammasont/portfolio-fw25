@@ -1,0 +1,99 @@
+---
+// src/components/PageTransition.astro
+// Staggered blur transition on page navigation
+---
+<script>
+    import { gsap } from 'gsap';
+  
+    function setupPageTransitions() {
+      // Elements to animate (in order of blur application)
+      const getAnimatableElements = () => {
+        const elements = [
+          ...document.querySelectorAll('h1, h2, h3'),
+          ...document.querySelectorAll('p, a, span, li'),
+          ...document.querySelectorAll('img'),
+          ...document.querySelectorAll('button, input'),
+        ];
+        
+        // Filter out any null/undefined elements
+        return elements.filter(el => el && el.nodeType === 1);
+      };
+  
+      // Transition OUT (leaving page)
+      const handleBeforePreparation = () => {
+        const elements = getAnimatableElements();
+        
+        if (elements.length === 0) return;
+        
+        // Kill any running animations
+        gsap.killTweensOf(elements);
+        
+        // Add class to trigger CSS blur (backup)
+        document.documentElement.classList.add('astro-transitioning');
+        
+        gsap.to(elements, {
+          filter: 'blur(20px)',
+          opacity: 0.5,
+          duration: 0.4,
+          stagger: 0.01,
+          ease: 'power2.in',
+        });
+      };
+  
+      // Transition IN (entering page)
+      const handlePageLoad = () => {
+        // Wait a tick for DOM to be ready
+        requestAnimationFrame(() => {
+          const elements = getAnimatableElements();
+          
+          if (elements.length === 0) {
+            // If no elements, still remove class to prevent permanent blur
+            document.documentElement.classList.remove('astro-transitioning');
+            return;
+          }
+          
+          // Kill any running animations
+          gsap.killTweensOf(elements);
+          
+          // Start blurred (GSAP takes over from CSS)
+          gsap.set(elements, {
+            filter: 'blur(20px)',
+            opacity: 0.5,
+          });
+          
+          // Remove CSS class now that GSAP has control
+          document.documentElement.classList.remove('astro-transitioning');
+          
+          // Animate to sharp after a small delay
+          requestAnimationFrame(() => {
+            gsap.to(elements, {
+              filter: 'blur(0px)',
+              opacity: 1,
+              duration: 0.5,
+              stagger: 0.01,
+              ease: 'power2.out',
+              delay: 0.05,
+            });
+          });
+        });
+      };
+  
+      // Remove old listeners to prevent duplicates
+      document.removeEventListener('astro:before-preparation', handleBeforePreparation);
+      document.removeEventListener('astro:page-load', handlePageLoad);
+      
+      // Add new listeners
+      document.addEventListener('astro:before-preparation', handleBeforePreparation);
+      document.addEventListener('astro:page-load', handlePageLoad);
+    }
+  
+    // Initialize on page load
+    document.addEventListener('astro:page-load', setupPageTransitions);
+    
+    // Initialize immediately if DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupPageTransitions);
+    } else {
+      setupPageTransitions();
+    }
+  </script>

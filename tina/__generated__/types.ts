@@ -86,6 +86,8 @@ export type Query = {
   projectConnection: ProjectConnection;
   settings: Settings;
   settingsConnection: SettingsConnection;
+  info: Info;
+  infoConnection: InfoConnection;
 };
 
 
@@ -139,9 +141,25 @@ export type QuerySettingsConnectionArgs = {
   filter?: InputMaybe<SettingsFilter>;
 };
 
+
+export type QueryInfoArgs = {
+  relativePath?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryInfoConnectionArgs = {
+  before?: InputMaybe<Scalars['String']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Float']['input']>;
+  last?: InputMaybe<Scalars['Float']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<InfoFilter>;
+};
+
 export type DocumentFilter = {
   project?: InputMaybe<ProjectFilter>;
   settings?: InputMaybe<SettingsFilter>;
+  info?: InputMaybe<InfoFilter>;
 };
 
 export type DocumentConnectionEdges = {
@@ -181,7 +199,7 @@ export type CollectionDocumentsArgs = {
   folder?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type DocumentNode = Project | Settings | Folder;
+export type DocumentNode = Project | Settings | Info | Folder;
 
 export type ProjectGallery = {
   __typename?: 'ProjectGallery';
@@ -311,6 +329,48 @@ export type SettingsConnection = Connection & {
   edges?: Maybe<Array<Maybe<SettingsConnectionEdges>>>;
 };
 
+export type InfoPressAndAwards = {
+  __typename?: 'InfoPressAndAwards';
+  title: Scalars['String']['output'];
+  url?: Maybe<Scalars['String']['output']>;
+};
+
+export type Info = Node & Document & {
+  __typename?: 'Info';
+  bio: Scalars['String']['output'];
+  availability: Scalars['String']['output'];
+  capabilities: Array<Scalars['String']['output']>;
+  pressAndAwards?: Maybe<Array<Maybe<InfoPressAndAwards>>>;
+  id: Scalars['ID']['output'];
+  _sys: SystemInfo;
+  _values: Scalars['JSON']['output'];
+};
+
+export type InfoPressAndAwardsFilter = {
+  title?: InputMaybe<StringFilter>;
+  url?: InputMaybe<StringFilter>;
+};
+
+export type InfoFilter = {
+  bio?: InputMaybe<StringFilter>;
+  availability?: InputMaybe<StringFilter>;
+  capabilities?: InputMaybe<StringFilter>;
+  pressAndAwards?: InputMaybe<InfoPressAndAwardsFilter>;
+};
+
+export type InfoConnectionEdges = {
+  __typename?: 'InfoConnectionEdges';
+  cursor: Scalars['String']['output'];
+  node?: Maybe<Info>;
+};
+
+export type InfoConnection = Connection & {
+  __typename?: 'InfoConnection';
+  pageInfo: PageInfo;
+  totalCount: Scalars['Float']['output'];
+  edges?: Maybe<Array<Maybe<InfoConnectionEdges>>>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addPendingDocument: DocumentNode;
@@ -322,6 +382,8 @@ export type Mutation = {
   createProject: Project;
   updateSettings: Settings;
   createSettings: Settings;
+  updateInfo: Info;
+  createInfo: Info;
 };
 
 
@@ -381,15 +443,29 @@ export type MutationCreateSettingsArgs = {
   params: SettingsMutation;
 };
 
+
+export type MutationUpdateInfoArgs = {
+  relativePath: Scalars['String']['input'];
+  params: InfoMutation;
+};
+
+
+export type MutationCreateInfoArgs = {
+  relativePath: Scalars['String']['input'];
+  params: InfoMutation;
+};
+
 export type DocumentUpdateMutation = {
   project?: InputMaybe<ProjectMutation>;
   settings?: InputMaybe<SettingsMutation>;
+  info?: InputMaybe<InfoMutation>;
   relativePath?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type DocumentMutation = {
   project?: InputMaybe<ProjectMutation>;
   settings?: InputMaybe<SettingsMutation>;
+  info?: InputMaybe<InfoMutation>;
 };
 
 export type ProjectGalleryMutation = {
@@ -422,9 +498,23 @@ export type SettingsMutation = {
   availableTags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
+export type InfoPressAndAwardsMutation = {
+  title?: InputMaybe<Scalars['String']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type InfoMutation = {
+  bio?: InputMaybe<Scalars['String']['input']>;
+  availability?: InputMaybe<Scalars['String']['input']>;
+  capabilities?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  pressAndAwards?: InputMaybe<Array<InputMaybe<InfoPressAndAwardsMutation>>>;
+};
+
 export type ProjectPartsFragment = { __typename: 'Project', title: string, slug: string, featured?: boolean | null, status: string, date: string, category: string, tagline?: string | null, client?: string | null, shortDescription?: string | null, description?: any | null, credits?: any | null, tags?: Array<string | null> | null, heroImage: string, gallery?: Array<{ __typename: 'ProjectGallery', layout: string, type: string, image?: string | null, videoUrl?: string | null, caption?: string | null } | null> | null };
 
 export type SettingsPartsFragment = { __typename: 'Settings', categories?: Array<string | null> | null, availableTags?: Array<string | null> | null };
+
+export type InfoPartsFragment = { __typename: 'Info', bio: string, availability: string, capabilities: Array<string>, pressAndAwards?: Array<{ __typename: 'InfoPressAndAwards', title: string, url?: string | null } | null> | null };
 
 export type ProjectQueryVariables = Exact<{
   relativePath: Scalars['String']['input'];
@@ -464,6 +554,25 @@ export type SettingsConnectionQueryVariables = Exact<{
 
 export type SettingsConnectionQuery = { __typename?: 'Query', settingsConnection: { __typename?: 'SettingsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'SettingsConnectionEdges', cursor: string, node?: { __typename: 'Settings', id: string, categories?: Array<string | null> | null, availableTags?: Array<string | null> | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } | null> | null } };
 
+export type InfoQueryVariables = Exact<{
+  relativePath: Scalars['String']['input'];
+}>;
+
+
+export type InfoQuery = { __typename?: 'Query', info: { __typename: 'Info', id: string, bio: string, availability: string, capabilities: Array<string>, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, pressAndAwards?: Array<{ __typename: 'InfoPressAndAwards', title: string, url?: string | null } | null> | null } };
+
+export type InfoConnectionQueryVariables = Exact<{
+  before?: InputMaybe<Scalars['String']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Float']['input']>;
+  last?: InputMaybe<Scalars['Float']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<InfoFilter>;
+}>;
+
+
+export type InfoConnectionQuery = { __typename?: 'Query', infoConnection: { __typename?: 'InfoConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'InfoConnectionEdges', cursor: string, node?: { __typename: 'Info', id: string, bio: string, availability: string, capabilities: Array<string>, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, pressAndAwards?: Array<{ __typename: 'InfoPressAndAwards', title: string, url?: string | null } | null> | null } | null } | null> | null } };
+
 export const ProjectPartsFragmentDoc = gql`
     fragment ProjectParts on Project {
   __typename
@@ -495,6 +604,19 @@ export const SettingsPartsFragmentDoc = gql`
   __typename
   categories
   availableTags
+}
+    `;
+export const InfoPartsFragmentDoc = gql`
+    fragment InfoParts on Info {
+  __typename
+  bio
+  availability
+  capabilities
+  pressAndAwards {
+    __typename
+    title
+    url
+  }
 }
     `;
 export const ProjectDocument = gql`
@@ -611,6 +733,63 @@ export const SettingsConnectionDocument = gql`
   }
 }
     ${SettingsPartsFragmentDoc}`;
+export const InfoDocument = gql`
+    query info($relativePath: String!) {
+  info(relativePath: $relativePath) {
+    ... on Document {
+      _sys {
+        filename
+        basename
+        hasReferences
+        breadcrumbs
+        path
+        relativePath
+        extension
+      }
+      id
+    }
+    ...InfoParts
+  }
+}
+    ${InfoPartsFragmentDoc}`;
+export const InfoConnectionDocument = gql`
+    query infoConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: InfoFilter) {
+  infoConnection(
+    before: $before
+    after: $after
+    first: $first
+    last: $last
+    sort: $sort
+    filter: $filter
+  ) {
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
+    }
+    totalCount
+    edges {
+      cursor
+      node {
+        ... on Document {
+          _sys {
+            filename
+            basename
+            hasReferences
+            breadcrumbs
+            path
+            relativePath
+            extension
+          }
+          id
+        }
+        ...InfoParts
+      }
+    }
+  }
+}
+    ${InfoPartsFragmentDoc}`;
 export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R>
   export function getSdk<C>(requester: Requester<C>) {
     return {
@@ -625,6 +804,12 @@ export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) 
       },
     settingsConnection(variables?: SettingsConnectionQueryVariables, options?: C): Promise<{data: SettingsConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: SettingsConnectionQueryVariables, query: string}> {
         return requester<{data: SettingsConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: SettingsConnectionQueryVariables, query: string}, SettingsConnectionQueryVariables>(SettingsConnectionDocument, variables, options);
+      },
+    info(variables: InfoQueryVariables, options?: C): Promise<{data: InfoQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: InfoQueryVariables, query: string}> {
+        return requester<{data: InfoQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: InfoQueryVariables, query: string}, InfoQueryVariables>(InfoDocument, variables, options);
+      },
+    infoConnection(variables?: InfoConnectionQueryVariables, options?: C): Promise<{data: InfoConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: InfoConnectionQueryVariables, query: string}> {
+        return requester<{data: InfoConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: InfoConnectionQueryVariables, query: string}, InfoConnectionQueryVariables>(InfoConnectionDocument, variables, options);
       }
     };
   }

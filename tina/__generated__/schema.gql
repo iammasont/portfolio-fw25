@@ -58,11 +58,14 @@ type Query {
   projectConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: ProjectFilter): ProjectConnection!
   settings(relativePath: String): Settings!
   settingsConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: SettingsFilter): SettingsConnection!
+  info(relativePath: String): Info!
+  infoConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: InfoFilter): InfoConnection!
 }
 
 input DocumentFilter {
   project: ProjectFilter
   settings: SettingsFilter
+  info: InfoFilter
 }
 
 type DocumentConnectionEdges {
@@ -88,7 +91,7 @@ type Collection {
   documents(before: String, after: String, first: Float, last: Float, sort: String, filter: DocumentFilter, folder: String): DocumentConnection!
 }
 
-union DocumentNode = Project | Settings | Folder
+union DocumentNode = Project | Settings | Info | Folder
 
 type ProjectGallery {
   layout: String!
@@ -211,6 +214,44 @@ type SettingsConnection implements Connection {
   edges: [SettingsConnectionEdges]
 }
 
+type InfoPressAndAwards {
+  title: String!
+  url: String
+}
+
+type Info implements Node & Document {
+  bio: String!
+  availability: String!
+  capabilities: [String!]!
+  pressAndAwards: [InfoPressAndAwards]
+  id: ID!
+  _sys: SystemInfo!
+  _values: JSON!
+}
+
+input InfoPressAndAwardsFilter {
+  title: StringFilter
+  url: StringFilter
+}
+
+input InfoFilter {
+  bio: StringFilter
+  availability: StringFilter
+  capabilities: StringFilter
+  pressAndAwards: InfoPressAndAwardsFilter
+}
+
+type InfoConnectionEdges {
+  cursor: String!
+  node: Info
+}
+
+type InfoConnection implements Connection {
+  pageInfo: PageInfo!
+  totalCount: Float!
+  edges: [InfoConnectionEdges]
+}
+
 type Mutation {
   addPendingDocument(collection: String!, relativePath: String!, template: String): DocumentNode!
   updateDocument(collection: String, relativePath: String!, params: DocumentUpdateMutation!): DocumentNode!
@@ -221,17 +262,21 @@ type Mutation {
   createProject(relativePath: String!, params: ProjectMutation!): Project!
   updateSettings(relativePath: String!, params: SettingsMutation!): Settings!
   createSettings(relativePath: String!, params: SettingsMutation!): Settings!
+  updateInfo(relativePath: String!, params: InfoMutation!): Info!
+  createInfo(relativePath: String!, params: InfoMutation!): Info!
 }
 
 input DocumentUpdateMutation {
   project: ProjectMutation
   settings: SettingsMutation
+  info: InfoMutation
   relativePath: String
 }
 
 input DocumentMutation {
   project: ProjectMutation
   settings: SettingsMutation
+  info: InfoMutation
 }
 
 input ProjectGalleryMutation {
@@ -262,6 +307,18 @@ input ProjectMutation {
 input SettingsMutation {
   categories: [String]
   availableTags: [String]
+}
+
+input InfoPressAndAwardsMutation {
+  title: String
+  url: String
+}
+
+input InfoMutation {
+  bio: String
+  availability: String
+  capabilities: [String]
+  pressAndAwards: [InfoPressAndAwardsMutation]
 }
 
 schema {
