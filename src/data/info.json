@@ -1,24 +1,24 @@
 {
-    "bio": "Nathaniel Wilkens is a Technical Artist based in Cincinnati, working in live entertainment, broadcast, and immersive installations. His practice centers on real-time systems integration, technical direction, and media server programming. With a background in Opera and Interactive Media Studies from Miami University, he brings a multidisciplinary perspective to technical production. He has spent recent years working across Los Angeles and internationally, recently serving as Technical Director for a large scale projection at BLINK 2024 as well as lead Stage Precision programmer at the Esports World Cup.",
-    "availability": "Currently available for freelance work.",
-    "capabilities": [
-      "Media Server Programming (d3, Disguise, Resolume)",
-      "Real-time VFX (Notch, TouchDesigner, Unreal Engine)",
-      "Projection Mapping & Systems Design",
-      "Technical Direction & Systems Integration",
-      "Stage Precision Programming",
-      "LED Wall Configuration & Management",
-      "NDI & Video Workflow",
-      "IMAG & Broadcast Integration"
-    ],
-    "pressAndAwards": [
-      {
-        "title": "BLINK Cincinnati 2024 - Featured Installation",
-        "url": ""
-      },
-      {
-        "title": "Esports World Cup 2024 - Technical Team",
-        "url": ""
-      }
-    ]
-  }
+  "bio": "Nathaniel Wilkens is a Technical Artist based in Cincinnati, working in live entertainment, broadcast, and immersive installations. His practice centers on real-time systems integration, technical direction, and media server programming. With a background in Opera and Interactive Media Studies from Miami University, he brings a multidisciplinary perspective to technical production. He has spent recent years working across Los Angeles and internationally, recently serving as Technical Director for a large scale projection at BLINK 2024 as well as lead Stage Precision programmer at the Esports World Cup.",
+  "availability": "Currently available for freelance work.",
+  "capabilities": [
+    "Media Server Programming (d3, Disguise, Resolume)",
+    "Real-time VFX (Notch, TouchDesigner, Unreal Engine)",
+    "Projection Mapping & Systems Design",
+    "Technical Direction & Systems Integration",
+    "Stage Precision Programming",
+    "LED Wall Configuration & Management",
+    "NDI & Video Workflow",
+    "IMAG & Broadcast Integration"
+  ],
+  "pressAndAwards": [
+    {
+      "title": "BLINK Cincinnati 2024 - Featured Installation",
+      "url": ""
+    },
+    {
+      "title": "Hydrogen Jukebox, American Prize - Virtual Performance",
+      "url": "https://theamericanprize.blogspot.com/2023/10/national-winners-virtual-performance_01430326111.html?m=1"
+    }
+  ]
+}
