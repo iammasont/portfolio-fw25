@@ -1,28 +1,27 @@
 {
-    "categories": [
-      "Live Events",
-      "Installation",
-      "Broadcast",
-      "Concert",
-      "Experiential",
-      "Corporate"
-    ],
-    "availableTags": [
-      "Media Servers",
-      "d3",
-      "Notch",
-      "TouchDesigner",
-      "Projection Mapping",
-      "NDI",
-      "Unreal Engine",
-      "LED Walls",
-      "Real-time VFX",
-      "Systems Integration",
-      "Resolume",
-      "IMAG",
-      "Interactive",
-      "Kinect",
-      "Disguise",
-      "Motion Graphics"
-    ]
-  }
+  "categories": [
+    "Live Events",
+    "Installation",
+    "Broadcast",
+    "Concert",
+    "Experiential",
+    "Corporate"
+  ],
+  "availableTags": [
+    "Media Servers",
+    "d3",
+    "Notch",
+    "TouchDesigner",
+    "Projection Mapping",
+    "NDI",
+    "Unreal Engine",
+    "LED Walls",
+    "Real-time VFX",
+    "Systems Integration",
+    "Resolume",
+    "IMAG",
+    "Interactive",
+    "Kinect",
+    "Motion Graphics"
+  ]
+}
