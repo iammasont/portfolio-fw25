@@ -2,7 +2,15 @@
 // src/components/Footer.astro
 // Fixed footer with gradient overlay (transparent → orange)
 // Mobile: Slides up from below screen on tap
+
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+const settingsPath = join(process.cwd(), 'src', 'data', 'site-settings.json');
+const settings = JSON.parse(readFileSync(settingsPath, 'utf-8'));
 ---
+
+
 
 <footer id="main-footer">
   <div class="footer-gradient-container">
@@ -41,13 +49,16 @@
       </p>
     </div>
     <div class="footer-right">
-      <a href="/cv" class="footer-link" data-hover="true">Download CV</a>
+      <a href={settings.cvFile || '/cv'} class="footer-link" data-hover="true">
+        Download CV
+      </a>      
       <p class="footer-copyright">©2025 All Rights Reserved</p>
     </div>
   </div>
 </footer>
 
 <script>
+
   function initFooterToggle() {
     const footer = document.getElementById('main-footer');
     const toggle = document.getElementById('footer-toggle');

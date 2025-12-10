@@ -112,6 +112,8 @@
     color: #000;
     text-decoration: none;
     font-size: 1rem;
+    transition: filter var(--transition-speed) var(--ease-out-timing);
+    filter: blur(0px);
   }
 
   /* --- 4. NAV TOGGLE COMPONENT --- */
@@ -277,6 +279,11 @@
     position: relative;
     z-index: 1;
   }
+
+  /* Blur the site name when nav is fully opened */
+  #nav-content-wrapper.nav-active .site-name {
+    filter: blur(8px);
+  }
 }
 
 /* Keep wrapper fixed */
@@ -289,7 +296,8 @@
 <script is:inline>
   function initNavigation() {
     const toggle = document.getElementById('nav-toggle');
-    if (!toggle) return;
+    const navWrapper = document.getElementById('nav-content-wrapper');
+    if (!toggle || !navWrapper) return;
 
     if (toggle._clickHandler) toggle.removeEventListener('click', toggle._clickHandler);
 
@@ -325,11 +333,13 @@
 
           setTimeout(() => {
               toggle.classList.add('is-active');
+              navWrapper.classList.add('nav-active');
           }, 20);
 
         } else {
           // --- CLOSING SEQUENCE ---
           toggle.classList.remove('is-active');
+          navWrapper.classList.remove('nav-active');
           setTimeout(() => {
             if(!toggle.classList.contains('is-active')) {
               toggle.style.removeProperty('--links-max-width');
@@ -343,15 +353,20 @@
     toggle._clickHandler = clickHandler;
 
     // Helpers
+    const closeNav = () => {
+      toggle.classList.remove('is-active');
+      navWrapper.classList.remove('nav-active');
+    };
+
     document.addEventListener('click', (e) => {
         if (toggle.classList.contains('is-active') && !toggle.contains(e.target)) {
-            toggle.classList.remove('is-active');
+            closeNav();
         }
     });
     
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && toggle.classList.contains('is-active')) {
-            toggle.classList.remove('is-active');
+            closeNav();
         }
     });
   }
