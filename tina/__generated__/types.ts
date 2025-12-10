@@ -86,6 +86,8 @@ export type Query = {
   projectConnection: ProjectConnection;
   settings: Settings;
   settingsConnection: SettingsConnection;
+  siteSettings: SiteSettings;
+  siteSettingsConnection: SiteSettingsConnection;
   info: Info;
   infoConnection: InfoConnection;
 };
@@ -142,6 +144,21 @@ export type QuerySettingsConnectionArgs = {
 };
 
 
+export type QuerySiteSettingsArgs = {
+  relativePath?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QuerySiteSettingsConnectionArgs = {
+  before?: InputMaybe<Scalars['String']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Float']['input']>;
+  last?: InputMaybe<Scalars['Float']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<SiteSettingsFilter>;
+};
+
+
 export type QueryInfoArgs = {
   relativePath?: InputMaybe<Scalars['String']['input']>;
 };
@@ -159,6 +176,7 @@ export type QueryInfoConnectionArgs = {
 export type DocumentFilter = {
   project?: InputMaybe<ProjectFilter>;
   settings?: InputMaybe<SettingsFilter>;
+  siteSettings?: InputMaybe<SiteSettingsFilter>;
   info?: InputMaybe<InfoFilter>;
 };
 
@@ -199,7 +217,7 @@ export type CollectionDocumentsArgs = {
   folder?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type DocumentNode = Project | Settings | Info | Folder;
+export type DocumentNode = Project | Settings | SiteSettings | Info | Folder;
 
 export type ProjectGallery = {
   __typename?: 'ProjectGallery';
@@ -329,6 +347,35 @@ export type SettingsConnection = Connection & {
   edges?: Maybe<Array<Maybe<SettingsConnectionEdges>>>;
 };
 
+export type SiteSettings = Node & Document & {
+  __typename?: 'SiteSettings';
+  contactEmail: Scalars['String']['output'];
+  cvFile?: Maybe<Scalars['String']['output']>;
+  socialLinks?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  id: Scalars['ID']['output'];
+  _sys: SystemInfo;
+  _values: Scalars['JSON']['output'];
+};
+
+export type SiteSettingsFilter = {
+  contactEmail?: InputMaybe<StringFilter>;
+  cvFile?: InputMaybe<ImageFilter>;
+  socialLinks?: InputMaybe<StringFilter>;
+};
+
+export type SiteSettingsConnectionEdges = {
+  __typename?: 'SiteSettingsConnectionEdges';
+  cursor: Scalars['String']['output'];
+  node?: Maybe<SiteSettings>;
+};
+
+export type SiteSettingsConnection = Connection & {
+  __typename?: 'SiteSettingsConnection';
+  pageInfo: PageInfo;
+  totalCount: Scalars['Float']['output'];
+  edges?: Maybe<Array<Maybe<SiteSettingsConnectionEdges>>>;
+};
+
 export type InfoPressAndAwards = {
   __typename?: 'InfoPressAndAwards';
   title: Scalars['String']['output'];
@@ -382,6 +429,8 @@ export type Mutation = {
   createProject: Project;
   updateSettings: Settings;
   createSettings: Settings;
+  updateSiteSettings: SiteSettings;
+  createSiteSettings: SiteSettings;
   updateInfo: Info;
   createInfo: Info;
 };
@@ -444,6 +493,18 @@ export type MutationCreateSettingsArgs = {
 };
 
 
+export type MutationUpdateSiteSettingsArgs = {
+  relativePath: Scalars['String']['input'];
+  params: SiteSettingsMutation;
+};
+
+
+export type MutationCreateSiteSettingsArgs = {
+  relativePath: Scalars['String']['input'];
+  params: SiteSettingsMutation;
+};
+
+
 export type MutationUpdateInfoArgs = {
   relativePath: Scalars['String']['input'];
   params: InfoMutation;
@@ -458,6 +519,7 @@ export type MutationCreateInfoArgs = {
 export type DocumentUpdateMutation = {
   project?: InputMaybe<ProjectMutation>;
   settings?: InputMaybe<SettingsMutation>;
+  siteSettings?: InputMaybe<SiteSettingsMutation>;
   info?: InputMaybe<InfoMutation>;
   relativePath?: InputMaybe<Scalars['String']['input']>;
 };
@@ -465,6 +527,7 @@ export type DocumentUpdateMutation = {
 export type DocumentMutation = {
   project?: InputMaybe<ProjectMutation>;
   settings?: InputMaybe<SettingsMutation>;
+  siteSettings?: InputMaybe<SiteSettingsMutation>;
   info?: InputMaybe<InfoMutation>;
 };
 
@@ -498,6 +561,12 @@ export type SettingsMutation = {
   availableTags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
+export type SiteSettingsMutation = {
+  contactEmail?: InputMaybe<Scalars['String']['input']>;
+  cvFile?: InputMaybe<Scalars['String']['input']>;
+  socialLinks?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
 export type InfoPressAndAwardsMutation = {
   title?: InputMaybe<Scalars['String']['input']>;
   url?: InputMaybe<Scalars['String']['input']>;
@@ -513,6 +582,8 @@ export type InfoMutation = {
 export type ProjectPartsFragment = { __typename: 'Project', title: string, slug: string, featured?: boolean | null, status: string, date: string, category: string, tagline?: string | null, client?: string | null, shortDescription?: string | null, description?: any | null, credits?: any | null, tags?: Array<string | null> | null, heroImage: string, gallery?: Array<{ __typename: 'ProjectGallery', layout: string, type: string, image?: string | null, videoUrl?: string | null, caption?: string | null } | null> | null };
 
 export type SettingsPartsFragment = { __typename: 'Settings', categories?: Array<string | null> | null, availableTags?: Array<string | null> | null };
+
+export type SiteSettingsPartsFragment = { __typename: 'SiteSettings', contactEmail: string, cvFile?: string | null, socialLinks?: Array<string | null> | null };
 
 export type InfoPartsFragment = { __typename: 'Info', bio: string, availability: string, capabilities: Array<string>, pressAndAwards?: Array<{ __typename: 'InfoPressAndAwards', title: string, url?: string | null } | null> | null };
 
@@ -553,6 +624,25 @@ export type SettingsConnectionQueryVariables = Exact<{
 
 
 export type SettingsConnectionQuery = { __typename?: 'Query', settingsConnection: { __typename?: 'SettingsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'SettingsConnectionEdges', cursor: string, node?: { __typename: 'Settings', id: string, categories?: Array<string | null> | null, availableTags?: Array<string | null> | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } | null> | null } };
+
+export type SiteSettingsQueryVariables = Exact<{
+  relativePath: Scalars['String']['input'];
+}>;
+
+
+export type SiteSettingsQuery = { __typename?: 'Query', siteSettings: { __typename: 'SiteSettings', id: string, contactEmail: string, cvFile?: string | null, socialLinks?: Array<string | null> | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } };
+
+export type SiteSettingsConnectionQueryVariables = Exact<{
+  before?: InputMaybe<Scalars['String']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Float']['input']>;
+  last?: InputMaybe<Scalars['Float']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<SiteSettingsFilter>;
+}>;
+
+
+export type SiteSettingsConnectionQuery = { __typename?: 'Query', siteSettingsConnection: { __typename?: 'SiteSettingsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'SiteSettingsConnectionEdges', cursor: string, node?: { __typename: 'SiteSettings', id: string, contactEmail: string, cvFile?: string | null, socialLinks?: Array<string | null> | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } | null> | null } };
 
 export type InfoQueryVariables = Exact<{
   relativePath: Scalars['String']['input'];
@@ -604,6 +694,14 @@ export const SettingsPartsFragmentDoc = gql`
   __typename
   categories
   availableTags
+}
+    `;
+export const SiteSettingsPartsFragmentDoc = gql`
+    fragment SiteSettingsParts on SiteSettings {
+  __typename
+  contactEmail
+  cvFile
+  socialLinks
 }
     `;
 export const InfoPartsFragmentDoc = gql`
@@ -733,6 +831,63 @@ export const SettingsConnectionDocument = gql`
   }
 }
     ${SettingsPartsFragmentDoc}`;
+export const SiteSettingsDocument = gql`
+    query siteSettings($relativePath: String!) {
+  siteSettings(relativePath: $relativePath) {
+    ... on Document {
+      _sys {
+        filename
+        basename
+        hasReferences
+        breadcrumbs
+        path
+        relativePath
+        extension
+      }
+      id
+    }
+    ...SiteSettingsParts
+  }
+}
+    ${SiteSettingsPartsFragmentDoc}`;
+export const SiteSettingsConnectionDocument = gql`
+    query siteSettingsConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: SiteSettingsFilter) {
+  siteSettingsConnection(
+    before: $before
+    after: $after
+    first: $first
+    last: $last
+    sort: $sort
+    filter: $filter
+  ) {
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
+    }
+    totalCount
+    edges {
+      cursor
+      node {
+        ... on Document {
+          _sys {
+            filename
+            basename
+            hasReferences
+            breadcrumbs
+            path
+            relativePath
+            extension
+          }
+          id
+        }
+        ...SiteSettingsParts
+      }
+    }
+  }
+}
+    ${SiteSettingsPartsFragmentDoc}`;
 export const InfoDocument = gql`
     query info($relativePath: String!) {
   info(relativePath: $relativePath) {
@@ -804,6 +959,12 @@ export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) 
       },
     settingsConnection(variables?: SettingsConnectionQueryVariables, options?: C): Promise<{data: SettingsConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: SettingsConnectionQueryVariables, query: string}> {
         return requester<{data: SettingsConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: SettingsConnectionQueryVariables, query: string}, SettingsConnectionQueryVariables>(SettingsConnectionDocument, variables, options);
+      },
+    siteSettings(variables: SiteSettingsQueryVariables, options?: C): Promise<{data: SiteSettingsQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: SiteSettingsQueryVariables, query: string}> {
+        return requester<{data: SiteSettingsQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: SiteSettingsQueryVariables, query: string}, SiteSettingsQueryVariables>(SiteSettingsDocument, variables, options);
+      },
+    siteSettingsConnection(variables?: SiteSettingsConnectionQueryVariables, options?: C): Promise<{data: SiteSettingsConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: SiteSettingsConnectionQueryVariables, query: string}> {
+        return requester<{data: SiteSettingsConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: SiteSettingsConnectionQueryVariables, query: string}, SiteSettingsConnectionQueryVariables>(SiteSettingsConnectionDocument, variables, options);
       },
     info(variables: InfoQueryVariables, options?: C): Promise<{data: InfoQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: InfoQueryVariables, query: string}> {
         return requester<{data: InfoQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: InfoQueryVariables, query: string}, InfoQueryVariables>(InfoDocument, variables, options);
