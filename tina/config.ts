@@ -280,27 +280,12 @@ export default defineConfig({
             description: "Upload PDF of CV - this will be used for the 'Download CV' link in footer",
           },
           {
-            type: "object",
+            type: "string",
             name: "socialLinks",
             label: "Social Links",
-            description: "Optional social media links",
+            description: "Optional social media links (one per line)",
             list: true,
-            fields: [
-              {
-                type: "string",
-                name: "platform",
-                label: "Platform",
-                options: ["LinkedIn", "Instagram", "Twitter", "Vimeo", "Other"],
-              },
-              {
-                type: "string",
-                name: "url",
-                label: "URL",
-              },
-            ],
           },
-        ],
-      },
       // Info Page Collection
       {
         name: "info",
