@@ -58,6 +58,8 @@ type Query {
   projectConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: ProjectFilter): ProjectConnection!
   settings(relativePath: String): Settings!
   settingsConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: SettingsFilter): SettingsConnection!
+  siteSettings(relativePath: String): SiteSettings!
+  siteSettingsConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: SiteSettingsFilter): SiteSettingsConnection!
   info(relativePath: String): Info!
   infoConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: InfoFilter): InfoConnection!
 }
@@ -65,6 +67,7 @@ type Query {
 input DocumentFilter {
   project: ProjectFilter
   settings: SettingsFilter
+  siteSettings: SiteSettingsFilter
   info: InfoFilter
 }
 
@@ -91,7 +94,7 @@ type Collection {
   documents(before: String, after: String, first: Float, last: Float, sort: String, filter: DocumentFilter, folder: String): DocumentConnection!
 }
 
-union DocumentNode = Project | Settings | Info | Folder
+union DocumentNode = Project | Settings | SiteSettings | Info | Folder
 
 type ProjectGallery {
   layout: String!
@@ -214,6 +217,32 @@ type SettingsConnection implements Connection {
   edges: [SettingsConnectionEdges]
 }
 
+type SiteSettings implements Node & Document {
+  contactEmail: String!
+  cvFile: String
+  socialLinks: [String]
+  id: ID!
+  _sys: SystemInfo!
+  _values: JSON!
+}
+
+input SiteSettingsFilter {
+  contactEmail: StringFilter
+  cvFile: ImageFilter
+  socialLinks: StringFilter
+}
+
+type SiteSettingsConnectionEdges {
+  cursor: String!
+  node: SiteSettings
+}
+
+type SiteSettingsConnection implements Connection {
+  pageInfo: PageInfo!
+  totalCount: Float!
+  edges: [SiteSettingsConnectionEdges]
+}
+
 type InfoPressAndAwards {
   title: String!
   url: String
@@ -262,6 +291,8 @@ type Mutation {
   createProject(relativePath: String!, params: ProjectMutation!): Project!
   updateSettings(relativePath: String!, params: SettingsMutation!): Settings!
   createSettings(relativePath: String!, params: SettingsMutation!): Settings!
+  updateSiteSettings(relativePath: String!, params: SiteSettingsMutation!): SiteSettings!
+  createSiteSettings(relativePath: String!, params: SiteSettingsMutation!): SiteSettings!
   updateInfo(relativePath: String!, params: InfoMutation!): Info!
   createInfo(relativePath: String!, params: InfoMutation!): Info!
 }
@@ -269,6 +300,7 @@ type Mutation {
 input DocumentUpdateMutation {
   project: ProjectMutation
   settings: SettingsMutation
+  siteSettings: SiteSettingsMutation
   info: InfoMutation
   relativePath: String
 }
@@ -276,6 +308,7 @@ input DocumentUpdateMutation {
 input DocumentMutation {
   project: ProjectMutation
   settings: SettingsMutation
+  siteSettings: SiteSettingsMutation
   info: InfoMutation
 }
 
@@ -307,6 +340,12 @@ input ProjectMutation {
 input SettingsMutation {
   categories: [String]
   availableTags: [String]
+}
+
+input SiteSettingsMutation {
+  contactEmail: String
+  cvFile: String
+  socialLinks: [String]
 }
 
 input InfoPressAndAwardsMutation {
