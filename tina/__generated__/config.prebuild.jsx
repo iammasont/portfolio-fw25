@@ -5,17 +5,21 @@ var config_default = defineConfig({
   branch,
   // Get this from tina.io
   clientId: process.env.TINA_PUBLIC_CLIENT_ID,
-  // Changed from NEXT_PUBLIC_TINA_CLIENT_ID
   // Get this from tina.io
   token: process.env.TINA_TOKEN,
+  // ADD THIS LINE - bypasses schema mismatch errors
+  localContentPath: void 0,
   build: {
     outputFolder: "admin",
     publicFolder: "public"
   },
+  // Cloudinary media configuration
+  // Note: The Cloudinary media store is configured via the API route at api/cloudinary/[...media].ts
+  // and should be set up at the provider level, not in the config file
   media: {
     tina: {
-      mediaRoot: "images",
-      publicFolder: "public"
+      publicFolder: "public",
+      mediaRoot: "images"
     }
   },
   // See docs on content modeling for more info on how to setup new content models: https://tina.io/docs/schema/
@@ -231,6 +235,44 @@ var config_default = defineConfig({
           }
         ]
       },
+      // NEW: Site Settings Collection (Contact Email + CV)
+      {
+        name: "siteSettings",
+        label: "Site Settings",
+        path: "src/data",
+        format: "json",
+        ui: {
+          allowedActions: {
+            create: false,
+            delete: false
+          }
+        },
+        match: {
+          include: "site-settings"
+        },
+        fields: [
+          {
+            type: "string",
+            name: "contactEmail",
+            label: "Contact Email",
+            required: true,
+            description: "Email address for contact form submissions"
+          },
+          {
+            type: "image",
+            name: "cvFile",
+            label: "CV/Resume File",
+            description: "Upload PDF of CV - this will be used for the 'Download CV' link in footer"
+          },
+          {
+            type: "string",
+            name: "socialLinks",
+            label: "Social Links",
+            description: "Optional social media links (one per line)",
+            list: true
+          }
+        ]
+      },
       // Info Page Collection
       {
         name: "info",
@@ -241,8 +283,7 @@ var config_default = defineConfig({
           allowedActions: {
             create: false,
             delete: false
-          },
-          global: true
+          }
         },
         match: {
           include: "info"
