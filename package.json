@@ -21,11 +21,6 @@
   "devDependencies": {
     "@types/three": "^0.181.0"
   },
-  "overrides": {
-    "next-tinacms-cloudinary": {
-      "tinacms": "$tinacms"
-    }
-  },
   "engines": {
     "node": "18.x"
   }
