@@ -22,7 +22,6 @@ export default defineConfig({
    build: {
     outputFolder: "admin",
     publicFolder: "public",
-    skipSDKGeneration: true,
   },
   
   // Cloudinary media configuration
@@ -260,7 +259,6 @@ export default defineConfig({
             create: false,
             delete: false,
           },
-          global: true,
         },
         match: {
           include: "site-settings",
@@ -286,6 +284,8 @@ export default defineConfig({
             description: "Optional social media links (one per line)",
             list: true,
           },
+        ],
+      },
       // Info Page Collection
       {
         name: "info",
@@ -297,7 +297,6 @@ export default defineConfig({
             create: false,
             delete: false,
           },
-          global: true,
         },
         match: {
           include: "info",
