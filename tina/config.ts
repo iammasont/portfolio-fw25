@@ -19,9 +19,10 @@ export default defineConfig({
    localContentPath: undefined,
 
 
-  build: {
+   build: {
     outputFolder: "admin",
     publicFolder: "public",
+    skipSDKGeneration: true,
   },
   
   // Cloudinary media configuration
