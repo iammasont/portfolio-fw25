@@ -3,5 +3,6 @@
     "buildCommand": "npm install && npm run build",
     "installCommand": "npm ci --legacy-peer-deps",
     "framework": null,
-    "outputDirectory": "dist"
+    "outputDirectory": "dist",
+    "regions": ["sfo1"]
   }
