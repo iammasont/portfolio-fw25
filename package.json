@@ -25,5 +25,8 @@
     "next-tinacms-cloudinary": {
       "tinacms": "$tinacms"
     }
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
