@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "tinacms dev -c \"astro dev --host\"",
     "dev:astro": "astro dev",
-"build": "TINA_SKIP_SCHEMA_CHECK=1 tinacms build && astro build"    "preview": "astro preview",
+    "build": "TINA_SKIP_SCHEMA_CHECK=1 tinacms build && astro build",
+    "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
