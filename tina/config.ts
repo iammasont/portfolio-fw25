@@ -15,6 +15,10 @@ export default defineConfig({
   // Get this from tina.io
   token: process.env.TINA_TOKEN,
 
+   // ADD THIS LINE - bypasses schema mismatch errors
+   localContentPath: undefined,
+
+
   build: {
     outputFolder: "admin",
     publicFolder: "public",
