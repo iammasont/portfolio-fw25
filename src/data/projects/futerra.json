@@ -1,0 +1,19 @@
+{
+  "title": "Futerra | I was the Earth",
+  "slug": "futerra",
+  "featured": true,
+  "status": "published",
+  "date": "2024-10-24T00:00:00.000Z",
+  "category": "installation",
+  "description": "",
+  "credits": "",
+  "tags": [
+    "d3",
+    "TouchDesigner",
+    "Projection Mapping",
+    "NDI",
+    "Unreal Engine",
+    "Real-time VFX"
+  ],
+  "heroImage": "/images/NWS04919-Enhanced-NR.jpeg"
+}
