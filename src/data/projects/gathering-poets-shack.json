@@ -39,9 +39,10 @@
       "caption": "Performance highlights reel"
     },
     {
+      "layout": "full",
       "type": "image",
-      "image": "/imageshttps:/.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1600&h=900&fit=crop",
-      "caption": "Audience perspective showing immersive environment"
+      "image": "/images/the%20gathering%20overview.00_02_19_05%201.png",
+      "caption": "Working on projections in the theater"
     }
   ]
 }
