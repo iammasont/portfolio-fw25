@@ -19,5 +19,14 @@
     "LED Walls",
     "Systems Integration"
   ],
-  "heroImage": "/images/vlcsnap-2025-10-01-15h09m34s854.png"
+  "heroImage": "/images/vlcsnap-2025-10-01-15h09m34s854.png",
+  "gallery": [
+    {
+      "layout": "half",
+      "type": "image",
+      "image": "/images/vlcsnap-2025-10-01-15h07m17s004.png",
+      "videoUrl": "",
+      "caption": "Jacques writing at a desk"
+    }
+  ]
 }
