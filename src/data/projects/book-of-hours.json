@@ -10,5 +10,14 @@
   "shortDescription": "Miami University Opera Theater's production of The Book of Hours, A jukebox opera by Ben Smolder based on Frans Masereel's \"Passionate Journey\". We made extensive use of the new XR stage at Miami University filming over half the production there and the other half in the Gates Theater on green screen.",
   "description": "",
   "credits": "",
+  "tags": [
+    "Media Servers",
+    "d3",
+    "TouchDesigner",
+    "Unreal Engine",
+    "Real-time VFX",
+    "LED Walls",
+    "Systems Integration"
+  ],
   "heroImage": "/images/vlcsnap-2025-10-01-15h09m34s854.png"
 }
