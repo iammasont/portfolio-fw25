@@ -27,9 +27,10 @@
       "caption": "Poems Projected onto Upham Hall with Touchdesginer"
     },
     {
+      "layout": "full",
       "type": "image",
-      "image": "/imageshttps:/.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=1600&h=900&fit=crop",
-      "caption": "Live performance moment with reactive visuals"
+      "image": "/images/DSC_0043.png",
+      "caption": "Testing Projections on the Shack in the theater before we placed it in the woods"
     },
     {
       "type": "video",
