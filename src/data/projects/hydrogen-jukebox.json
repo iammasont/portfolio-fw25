@@ -15,12 +15,12 @@
     "Projection Mapping",
     "TouchDesigner"
   ],
-  "heroImage": "/imageshttps:/.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&h=900&fit=crop",
+  "heroImage": "/images/jaweh bomb 2.png",
   "gallery": [
     {
       "layout": "full",
-      "type": "image",
-      "image": "/imageshttps:/.unsplash.com/photo-1551269901-5c5e14c25df7?w=1600&h=900&fit=crop",
+      "type": "video",
+      "image": "",
       "videoUrl": "https://www.youtube.com/watch?v=ZAMmQNpjiW0",
       "caption": ""
     },
