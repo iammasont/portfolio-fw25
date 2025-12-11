@@ -18,12 +18,13 @@
     "Real-time VFX",
     "Interactive"
   ],
-  "heroImage": "/imageshttps:/.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=1600&h=900&fit=crop",
+  "heroImage": "/images/the gathering overview.00_00_55_20.png",
   "gallery": [
     {
+      "layout": "full",
       "type": "image",
-      "image": "/imageshttps:/.unsplash.com/photo-1501281668745-f7f57925c3b4?w=1600&h=900&fit=crop",
-      "caption": "Main stage setup with architectural projection mapping"
+      "image": "/images/the%20gathering%20overview.00_02_38_14%201.png",
+      "caption": "Poems Projected onto Upham Hall with Touchdesginer"
     },
     {
       "type": "image",
