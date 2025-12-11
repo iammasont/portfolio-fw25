@@ -3,18 +3,20 @@
   "slug": "gathering-poets-shack",
   "featured": true,
   "status": "draft",
-  "date": "2024-06-15T00:00:00.000Z",
+  "date": "2020-11-27T00:00:00.000Z",
   "category": "live-events",
-  "tagline": "An immersive poetry experience blending technology and performance",
-  "client": "Poetry Foundation",
+  "tagline": "An immersive performance experience blending technology and focusing on the spoken word",
+  "client": "Miami University Theater Department",
   "shortDescription": "A groundbreaking live event that merged projection mapping with spoken word performance, creating an intimate yet technologically ambitious experience for 300 attendees.",
   "description": "\\[object Object]\n",
   "credits": "\\[object Object]\n",
   "tags": [
     "Media Servers",
-    "d3",
     "Notch",
-    "Projection Mapping"
+    "Projection Mapping",
+    "TouchDesigner",
+    "Real-time VFX",
+    "Interactive"
   ],
   "heroImage": "/imageshttps:/.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=1600&h=900&fit=crop",
   "gallery": [
