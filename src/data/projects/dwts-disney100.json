@@ -1,17 +1,16 @@
 {
   "title": "Dancing with the Stars Disney100",
   "slug": "dwts-disney100",
-  "featured": true,
-  "status": "published",
+  "featured": false,
+  "status": "draft",
   "date": "2023-09-16T00:00:00.000Z",
   "category": "broadcast",
   "tagline": "Cold open for Disney's Dancing with The Stars ",
   "client": "ABC Network",
-  "shortDescription": "A landmark broadcast event featuring real-time projection mapping, NDI workflows, and TouchDesigner-driven interactive elements that responded to dancer movements across multiple stages.",
+  "shortDescription": "",
   "description": "\\[object Object]\n",
   "credits": "\\[object Object]\n",
   "tags": [
-    "TouchDesigner",
     "Real-time VFX",
     "Unreal Engine",
     "LED Walls",
@@ -25,7 +24,7 @@
       "layout": "full",
       "type": "image",
       "image": "/images/Screenshot_20251125_165816.png",
-      "caption": "Multi-stage projection setup during rehearsal"
+      "caption": ""
     },
     {
       "layout": "half",

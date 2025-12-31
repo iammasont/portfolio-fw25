@@ -1,0 +1,51 @@
+{
+  "title": "The Book of Hours",
+  "slug": "book-of-hours",
+  "featured": true,
+  "status": "published",
+  "date": "2024-05-09T00:00:00.000Z",
+  "category": "concert",
+  "tagline": "Miami University Opera Theater's production of The Book of Hours, A jukebox opera by Ben Smolder based on Frans Masereel's \"Passionate Journey\"",
+  "client": "Miami University Opera Theater",
+  "shortDescription": "Miami University Opera Theater's production of The Book of Hours, A jukebox opera by Ben Smolder based on Frans Masereel's wood cuttings. We made extensive use of the new XR stage at Miami University filming over half the production there and the other half in the Gates Theater on green screen.",
+  "description": "",
+  "credits": "",
+  "tags": [
+    "Media Servers",
+    "d3",
+    "TouchDesigner",
+    "Unreal Engine",
+    "Real-time VFX",
+    "LED Walls",
+    "Systems Integration"
+  ],
+  "heroImage": "/images/vlcsnap-2025-10-01-15h09m34s854.png",
+  "gallery": [
+    {
+      "layout": "half",
+      "type": "image",
+      "image": "/images/vlcsnap-2025-10-01-15h07m17s004.png",
+      "videoUrl": "",
+      "caption": "Jacque writing at a desk"
+    },
+    {
+      "layout": "half",
+      "type": "image",
+      "image": "/images/vlcsnap-2025-10-01-15h08m23s663.png",
+      "caption": "Chloe hits General Cholitz with a glass bottle"
+    },
+    {
+      "layout": "full",
+      "type": "image",
+      "image": "/images/vlcsnap-2025-10-01-15h09m22s197.png",
+      "videoUrl": "",
+      "caption": "Jacque and Chloe Embracing"
+    },
+    {
+      "layout": "full",
+      "type": "image",
+      "image": "/images/vlcsnap-2025-10-01-15h08m35s497.png",
+      "caption": "Ben Smolder conducting the singers in the XR stage"
+    }
+  ]
+}

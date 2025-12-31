@@ -3,124 +3,44 @@
   "slug": "hydrogen-jukebox",
   "featured": true,
   "status": "published",
-  "date": "2024-03-10T00:00:00.000Z",
-  "category": "installation",
-  "tagline": "A permanent Unreal Engine-powered installation exploring energy and transformation",
-  "client": "Museum of Contemporary Art",
-  "shortDescription": "A permanent museum installation utilizing Unreal Engine and LED walls to create an ever-evolving meditation on energy, transformation, and the hydrogen economy.",
-  "description": {
-    "type": "root",
-    "children": [
-      {
-        "type": "p",
-        "children": [
-          {
-            "type": "text",
-            "text": "Hydrogen Jukebox represents a new paradigm in permanent museum installations - a system designed to run continuously for years while never repeating the same visual sequence twice. Built entirely in Unreal Engine, the installation generates real-time visualizations that respond to live data feeds about energy production, weather patterns, and atmospheric conditions."
-          }
-        ]
-      },
-      {
-        "type": "p",
-        "children": [
-          {
-            "type": "text",
-            "text": "The technical architecture required careful consideration of thermal management, redundancy, and graceful degradation. We implemented a dual-system approach where a primary workstation handles the complex Unreal Engine rendering while a backup system monitors health and can seamlessly take over if needed. The 40-foot LED wall installation demanded precise color calibration and real-time performance optimization."
-          }
-        ]
-      },
-      {
-        "type": "p",
-        "children": [
-          {
-            "type": "text",
-            "text": "Beyond the technical achievement, the project succeeds in creating a contemplative space where visitors can engage with abstract concepts about energy and sustainability through beautiful, ever-changing imagery. The installation has been running continuously for eight months with zero downtime."
-          }
-        ]
-      }
-    ]
-  },
-  "credits": {
-    "type": "root",
-    "children": [
-      {
-        "type": "p",
-        "children": [
-          {
-            "type": "text",
-            "text": "Artistic Director: Rebecca Thompson"
-          }
-        ]
-      },
-      {
-        "type": "p",
-        "children": [
-          {
-            "type": "text",
-            "text": "Technical Lead: Nate Wilkens"
-          }
-        ]
-      },
-      {
-        "type": "p",
-        "children": [
-          {
-            "type": "text",
-            "text": "Unreal Developer: Kevin Nguyen"
-          }
-        ]
-      },
-      {
-        "type": "p",
-        "children": [
-          {
-            "type": "text",
-            "text": "LED Systems: Sarah Kim"
-          }
-        ]
-      },
-      {
-        "type": "p",
-        "children": [
-          {
-            "type": "text",
-            "text": "Data Visualization: James Lee"
-          }
-        ]
-      }
-    ]
-  },
+  "date": "2021-05-07T00:00:00.000Z",
+  "category": "concert",
+  "tagline": "Miami University Opera Theater's Award Winning production of Phillip Glass' \"Hydrogen Jukebox\"",
+  "client": "Miami University Opera Theater",
+  "shortDescription": "Miami University Opera Theater's Award Winning production of Phillip Glass' \"Hydrogen Jukebox\" rehearsed and performed during the pandemic. Recipient of The American Prize in 2021 for Virtual Performance and Direction. Also the winner of NOA Division IV.  ",
+  "description": "",
+  "credits": "Stage Direction by Benjamin Smolder and Tiffany Lusht\n\nCamera Director: Tiffany Lusht / Camera 2: Nate Wilkens\n\nMusical Direction and Adaption: Benjamin Smolder\n\nLighting Designer: Thomas Hase \n\nAssociate Lighting Designer: Alaina Pizzoferrato \n\nVocal Coach: Christina Haan\n\nRecording Engineering: Alex Lusht\n\nMusicians: Steve Goers (keys), Michael LaMattina (Percussion), Eric Wurzelbacher (Sax), Rebecca Andres (Flute), Benjamin Smolder (piano)\n\nVideo Editors: Lusht/Smolder, Nate Wilkens\n\nCostumes by Joy and Elizabeth Galbraith of Costume Gallery-Newport\n\nTheater Liaison: Cassie Mings \n\nJeremiah Plessinger as Allen Ginsberg \n\nMichaela Woodbrey as Noami Ginsberg\n\nCaleb Orr as Eugene Ginsberg\n\nAndrew McLesse as Neil Cassady\n\nKate Trybus aas Carolyn Cassady\n\nLauren Maynus as Joyce Johnson\n\nAaron Garner as Jack Kerouac\n\nMike Rellick as William S. Burroughs\n\nJoseph Browning as The General\n\nNate Wilkens as The Capitalist \n\nEvan Lusht as Young Ginsberg \n\nEnsemble: Anna Greco, Cari Sullivan, Ellie Wilmes, Kate Ullery, Madison Wells\n\nDancers: John Litzler and Cody Szarko\n",
   "tags": [
-    "Unreal Engine",
-    "LED Walls",
-    "Real-time VFX",
-    "Systems Integration"
+    "Systems Integration",
+    "Projection Mapping",
+    "TouchDesigner"
   ],
-  "heroImage": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&h=900&fit=crop",
+  "heroImage": "/images/jaweh bomb 2.png",
   "gallery": [
     {
       "layout": "full",
-      "type": "image",
-      "image": "https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=1600&h=900&fit=crop",
-      "caption": "Installation view showing 40-foot LED wall"
+      "type": "video",
+      "image": "",
+      "videoUrl": "https://www.youtube.com/watch?v=ZAMmQNpjiW0",
+      "caption": "Hydrogen Jukebox Trailer"
     },
     {
       "layout": "half",
       "type": "image",
-      "image": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&h=900&fit=crop",
-      "caption": "Detail of real-time generative visuals"
+      "image": "/images/image 5.png",
+      "caption": "Moloch Peaking through a curtain "
     },
     {
       "layout": "half",
       "type": "image",
-      "image": "https://images.unsplash.com/photo-1617791160588-241658c0f566?w=1600&h=900&fit=crop",
-      "caption": "Visitors engaging with the installation"
+      "image": "/images/image%207.png",
+      "caption": "Aesthetic in the subway"
     },
     {
       "layout": "full",
       "type": "image",
-      "image": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1600&h=900&fit=crop",
-      "caption": "Technical infrastructure and redundancy systems"
+      "image": "/images/image%201.png",
+      "caption": "Ginsberg thinks back on his Childhood"
     }
   ]
 }

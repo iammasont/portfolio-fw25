@@ -1,122 +1,48 @@
 {
-    "title": "The Gathering at the Poet's Shack",
-    "slug": "gathering-poets-shack",
-    "featured": true,
-    "status": "published",
-    "date": "2024-06-15T00:00:00.000Z",
-    "category": "live-events",
-    "tagline": "An immersive poetry experience blending technology and performance",
-    "client": "Poetry Foundation",
-    "shortDescription": "A groundbreaking live event that merged projection mapping with spoken word performance, creating an intimate yet technologically ambitious experience for 300 attendees.",
-    "description": {
-      "type": "root",
-      "children": [
-        {
-          "type": "p",
-          "children": [
-            {
-              "type": "text",
-              "text": "This project pushed the boundaries of what's possible when combining traditional performance art with cutting-edge visual technology. Working closely with the creative team, we developed a responsive system that reacted to the performers' movements and voice in real-time."
-            }
-          ]
-        },
-        {
-          "type": "p",
-          "children": [
-            {
-              "type": "text",
-              "text": "The technical infrastructure included a custom-built d3 workflow that processed live camera feeds and audio inputs, translating them into dynamic visual responses projected across the venue's architectural surfaces. We utilized Notch for generative content that evolved throughout each performance, ensuring no two shows were identical."
-            }
-          ]
-        },
-        {
-          "type": "p",
-          "children": [
-            {
-              "type": "text",
-              "text": "The result was a seamless integration of physical and digital space that enhanced rather than overshadowed the intimate nature of spoken word performance. Audience members reported feeling transported, with technology serving the art rather than dominating it."
-            }
-          ]
-        }
-      ]
+  "title": "The Gathering at the Poet's Shack",
+  "slug": "gathering-poets-shack",
+  "featured": true,
+  "status": "draft",
+  "date": "2020-11-27T00:00:00.000Z",
+  "category": "live-events",
+  "tagline": "An immersive performance experience blending technology and focusing on the spoken word",
+  "client": "Miami University Theater Department",
+  "shortDescription": "A groundbreaking live event that merged projection mapping with spoken word performance, creating an intimate yet technologically ambitious experience for 300 attendees.",
+  "description": "\\[object Object]\n",
+  "credits": "\\[object Object]\n",
+  "tags": [
+    "Media Servers",
+    "Notch",
+    "Projection Mapping",
+    "TouchDesigner",
+    "Real-time VFX",
+    "Interactive"
+  ],
+  "heroImage": "/images/the gathering overview.00_00_55_20.png",
+  "gallery": [
+    {
+      "layout": "full",
+      "type": "image",
+      "image": "/images/the%20gathering%20overview.00_02_38_14%201.png",
+      "caption": "Poems Projected onto Upham Hall with Touchdesginer"
     },
-    "credits": {
-      "type": "root",
-      "children": [
-        {
-          "type": "p",
-          "children": [
-            {
-              "type": "text",
-              "text": "Creative Director: Sarah Mitchell"
-            }
-          ]
-        },
-        {
-          "type": "p",
-          "children": [
-            {
-              "type": "text",
-              "text": "Technical Director: Nate Wilkens"
-            }
-          ]
-        },
-        {
-          "type": "p",
-          "children": [
-            {
-              "type": "text",
-              "text": "Projection Design: Marcus Chen"
-            }
-          ]
-        },
-        {
-          "type": "p",
-          "children": [
-            {
-              "type": "text",
-              "text": "Sound Design: Jennifer Torres"
-            }
-          ]
-        },
-        {
-          "type": "p",
-          "children": [
-            {
-              "type": "text",
-              "text": "Producer: Alex Rodriguez"
-            }
-          ]
-        }
-      ]
+    {
+      "layout": "full",
+      "type": "image",
+      "image": "/images/DSC_0043.png",
+      "caption": "Testing Projections on the Shack in the theater"
     },
-    "tags": [
-      "Media Servers",
-      "d3",
-      "Notch",
-      "Projection Mapping"
-    ],
-    "heroImage": "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=1600&h=900&fit=crop",
-    "gallery": [
-      {
-        "type": "image",
-        "image": "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=1600&h=900&fit=crop",
-        "caption": "Main stage setup with architectural projection mapping"
-      },
-      {
-        "type": "image",
-        "image": "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=1600&h=900&fit=crop",
-        "caption": "Live performance moment with reactive visuals"
-      },
-      {
-        "type": "video",
-        "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
-        "caption": "Performance highlights reel"
-      },
-      {
-        "type": "image",
-        "image": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1600&h=900&fit=crop",
-        "caption": "Audience perspective showing immersive environment"
-      }
-    ]
-  }
+    {
+      "layout": "full",
+      "type": "video",
+      "videoUrl": "https://www.youtube.com/embed/y12yrlBZbkA?si=QsQTnyoq7dKkj_tK",
+      "caption": "Performance highlights reel"
+    },
+    {
+      "layout": "full",
+      "type": "image",
+      "image": "/images/the%20gathering%20overview.00_02_19_05%201.png",
+      "caption": "Working on projections in the theater"
+    }
+  ]
+}
