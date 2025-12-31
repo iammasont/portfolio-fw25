@@ -2,7 +2,7 @@
 // api/cloudinary/[...media].js
 // Vercel serverless function to handle Cloudinary media uploads for Tina CMS
 
-import { mediaHandlerConfig, createMediaHandler } from "next-tinacms-cloudinary/dist/handlers";
+import { mediaHandlerConfig, createMediaHandler } from "next-tinacms-cloudinary/dist/handlers.js";
 import { isAuthorized } from "@tinacms/auth";
 
 export const config = mediaHandlerConfig;
