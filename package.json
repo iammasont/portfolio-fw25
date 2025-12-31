@@ -7,7 +7,8 @@
     "dev:astro": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "vercel-build": "npm install --legacy-peer-deps && astro build"
   },
   "dependencies": {
     "@tinacms/auth": "^1.1.0",
