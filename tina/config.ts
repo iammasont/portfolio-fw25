@@ -15,22 +15,16 @@ export default defineConfig({
   // Get this from tina.io
   token: process.env.TINA_TOKEN,
 
-   // ADD THIS LINE - bypasses schema mismatch errors
-   localContentPath: undefined,
-
-
-   build: {
+  build: {
     outputFolder: "admin",
     publicFolder: "public",
   },
   
   // Cloudinary media configuration
-  // Note: The Cloudinary media store is configured via the API route at api/cloudinary/[...media].ts
-  // and should be set up at the provider level, not in the config file
   media: {
-    tina: {
-      publicFolder: "public",
-      mediaRoot: "images",
+    loadCustomStore: async () => {
+      const pack = await import("next-tinacms-cloudinary");
+      return pack.TinaCloudCloudinaryMediaStore;
     },
   },
 
