@@ -15,5 +15,12 @@
     "Unreal Engine",
     "Real-time VFX"
   ],
-  "heroImage": "/images/NWS04919-Enhanced-NR.jpeg"
+  "heroImage": "/images/NWS04919-Enhanced-NR.jpeg",
+  "gallery": [
+    {
+      "layout": "half",
+      "type": "image",
+      "image": "https://res.cloudinary.com/df24iwpu6/image/upload/v1767206262/NWS04919-Enhanced-NR_hkhksv.jpg"
+    }
+  ]
 }
