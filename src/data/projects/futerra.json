@@ -5,6 +5,7 @@
   "status": "published",
   "date": "2024-10-24T00:00:00.000Z",
   "category": "installation",
+  "client": "Blink 2024, Cincinnati Chamber of Commerce ",
   "description": "",
   "credits": "",
   "tags": [
@@ -20,7 +21,7 @@
     {
       "layout": "half",
       "type": "image",
-      "image": "https://res.cloudinary.com/df24iwpu6/image/upload/v1767206262/NWS04919-Enhanced-NR_hkhksv.jpg"
+      "image": "/imageshttps://res.cloudinary.com/df24iwpu6/image/upload/v1767206262/NWS04919-Enhanced-NR_hkhksv.jpg"
     }
   ]
 }
