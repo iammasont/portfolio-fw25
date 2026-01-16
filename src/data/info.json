@@ -4,12 +4,13 @@
   "capabilities": [
     "Media Server Programming (d3, Disguise, Resolume)",
     "Real-time VFX (Notch, TouchDesigner, Unreal Engine)",
-    "Projection Mapping & Systems Design",
+    "Projection Mapping & System Designs",
     "Technical Direction & Systems Integration",
-    "Stage Precision Programming",
+    "Stage Precision",
     "LED Wall Configuration & Management",
-    "NDI & Video Workflow",
-    "IMAG & Broadcast Integration"
+    "NDI & Video Workflows",
+    "IMAG & Broadcast Integration",
+    "API integration"
   ],
   "pressAndAwards": [
     {
